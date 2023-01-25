@@ -4,7 +4,7 @@ from container import Container
 from container_set import ContainerSet
 
 def save_set_of_containers(container_set, filename):
-    with open(filename, "w") as file:
+    with open(filename, "a") as file:
         for container in container_set.containers:
             file.write(container.get_code() + "\t")
             file.write(str(container.get_length()) + "\t")
