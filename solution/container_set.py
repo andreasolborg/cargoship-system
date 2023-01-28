@@ -19,14 +19,14 @@ class ContainerSet:
                 return container
         return None
 
-# Generate a list of random containers using add_container and remove_container functions
-def generate_random_containers(set_size):
-        container_set = ContainerSet()
-        for i in range(set_size):
-            container = generate_random_container()
-            container_set.add_container(container)
-        return container_set
-    
+    # Generate a list of random containers using add_container and remove_container functions
+    def generate_random_containers(set_size):
+            container_set = ContainerSet()
+            for i in range(set_size):
+                container = generate_random_container()
+                container_set.add_container(container)
+            return container_set
+        
 
 
     

@@ -23,12 +23,12 @@ def load_set_of_containers(file_name, container_set, container):
             values = line.split("\t")
             container = Container(values[0], int(values[1]), int(values[2]), int(values[3]), int(values[4]), int(values[5]), int(values[6]))
             container_set.add_container(container)
-  
+        file.close()
     return container_set
 
 
-        
-        
+
+
 
 
 

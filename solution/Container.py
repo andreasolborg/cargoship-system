@@ -1,15 +1,17 @@
+## Ikke ha mange kommentarer. Koden skal være lesbar uten kommentarer
 import random
 
 
 class Container:
     # The constructor of the class Container
     # Kan eventuelt gjøre om length, width og height til size?
-    def __init__(self, code, length, width, height, weight, loaded_weight, weight_capacity):
+    
+    def __init__(self, code, length, width, height, weight, cargo, weight_capacity):
         self.code = code
         self.length = length
         self.width = width
         self.height = height
-        self.loaded_weight = loaded_weight
+        self.cargo = cargo
         self.weight = weight
         self.weight_capacity = weight_capacity
 
@@ -26,8 +28,8 @@ class Container:
     def get_height(self):
         return self.height
 
-    def get_loaded_weight(self):
-        return self.loaded_weight
+    def get_cargo(self):
+        return self.cargo
 
     def get_weight(self):
         return self.weight
@@ -48,14 +50,15 @@ class Container:
     def set_height(self, height):
         self.height = height
 
-    def set_loaded_weight(self, loaded_weight):
-        self.loaded_weight = loaded_weight
+    def set_cargo(self, cargo):
+        self.cargo = cargo
 
     def set_weight(self, weight):
         self.weight = weight
 
     def set_weight_capacity(self, weight_capacity):
         self.weight_capacity = weight_capacity
+
 
     # tostring
     def __str__(self) -> str:
