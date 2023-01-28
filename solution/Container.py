@@ -62,16 +62,16 @@ class Container:
 
     # tostring
     def __str__(self) -> str:
-        return f"Container: {self.code}, {self.length}x{self.width}x{self.height}, {self.weight} tons, {self.loaded_weight} tons loaded, {self.weight_capacity} tons capacity"
+        return f"Container: {self.code}, {self.length}x{self.width}x{self.height}, container weight {self.weight} tons, {self.cargo} tons loaded, {self.weight_capacity} tons capacity"
 
 
 def createContainerCode():
-    id = "GAF"
+    id = "ABO"
     for _ in range(5):
         id += str(random.randint(0, 9))
     return id
 
-
+# Task 2.1.2
 # Generate a random container with a random code, length, width, height and weight
 # The loaded weight should be 0. The weight should be 2 tons for a 20 foot container and 4 tons for a 40 foot container.
 
@@ -85,7 +85,6 @@ def generate_random_container():
     weight_capacity = random_container_[2]
 
     # The loaded weight should be 0
-    random_container = Container(
-        random_code, length, 8, 8, weight, 0, weight_capacity)
+    random_container = Container(random_code, length, 8, 8, weight, 0, weight_capacity)
     return random_container
 
