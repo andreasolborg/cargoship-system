@@ -5,8 +5,8 @@ from container_set_manager import save_set_of_containers, load_set_of_containers
 
 def main():
     # Generate a set of 10 random containers
-    #container_set = ContainerSet()
-    #container_set.generate_random_containers(20000)
+    container_set = ContainerSet()
+    container_set.generate_random_containers(6000)
     
     # Save the containers to a file
     

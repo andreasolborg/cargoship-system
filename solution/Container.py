@@ -6,8 +6,8 @@ class Container:
     def __init__(self, code, length, weight, cargo, weight_capacity):
         self.code = code
         self.length = length
-        self.cargo = cargo
         self.weight = weight
+        self.cargo = cargo
         self.weight_capacity = weight_capacity
 
     # Get functions
@@ -76,6 +76,6 @@ def generate_random_container():
     weight_capacity = random_container_[2]
 
     # The loaded weight should be 0
-    random_container = Container(random_code, length, weight, 0, weight_capacity)
+    random_container = Container(random_code, length, weight, random.randint(0, weight_capacity), weight_capacity) ## random.randint(0, weight_capacity) is the cargo weight (loaded weight) make it a function
     return random_container
 
