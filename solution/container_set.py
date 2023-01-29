@@ -1,18 +1,18 @@
-from random import randint
 from container import generate_random_container
 
 class ContainerSet:
     def __init__(self):
         self.containers = []
         
-
     def add_container(self, container):
-        if self.find_container(container.code) == None: # We need this, because two objects with the same code will be considered equal
+        if self.find_container(container.code) == None: # We need this, because two containers can't have the same code
             self.containers.append(container)
 
+    # This may be removed later
     def remove_container(self, container):
         self.containers.remove(container)
 
+    # This may be removed later as it is basically inside the add_container function
     def find_container(self, code):
         for container in self.containers:
             if container.code == code:

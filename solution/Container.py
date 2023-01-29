@@ -1,16 +1,11 @@
 ## Ikke ha mange kommentarer. Koden skal være lesbar uten kommentarer
 import random
 
-
 class Container:
-    # The constructor of the class Container
-    # Kan eventuelt gjøre om length, width og height til size?
-    
-    def __init__(self, code, length, width, height, weight, cargo, weight_capacity):
+    # The constructor of the class Container   
+    def __init__(self, code, length, weight, cargo, weight_capacity):
         self.code = code
         self.length = length
-        self.width = width
-        self.height = height
         self.cargo = cargo
         self.weight = weight
         self.weight_capacity = weight_capacity
@@ -21,12 +16,6 @@ class Container:
 
     def get_length(self):
         return self.length
-
-    def get_width(self):
-        return self.width
-
-    def get_height(self):
-        return self.height
 
     def get_cargo(self):
         return self.cargo
@@ -44,12 +33,6 @@ class Container:
     def set_length(self, length):
         self.length = length
 
-    def set_width(self, width):
-        self.width = width
-
-    def set_height(self, height):
-        self.height = height
-
     def set_cargo(self, cargo):
         self.cargo = cargo
 
@@ -62,14 +45,22 @@ class Container:
 
     # tostring
     def __str__(self) -> str:
-        return f"Container: {self.code}, {self.length}x{self.width}x{self.height}, container weight {self.weight} tons, {self.cargo} tons loaded, {self.weight_capacity} tons capacity"
+        return f"Container: {self.code}, length: {self.length}, container weight {self.weight} tons, {self.cargo} tons loaded, {self.weight_capacity} tons capacity"
 
 
 def createContainerCode():
+    if not hasattr(createContainerCode, "counter"):
+        createContainerCode.counter = 1
+    id = str(createContainerCode.counter).zfill(2)
+    createContainerCode.counter += 1
+    return id
+
+def createContainerCode1():
     id = "ABO"
     for _ in range(5):
         id += str(random.randint(0, 9))
     return id
+
 
 # Task 2.1.2
 # Generate a random container with a random code, length, width, height and weight
@@ -85,6 +76,6 @@ def generate_random_container():
     weight_capacity = random_container_[2]
 
     # The loaded weight should be 0
-    random_container = Container(random_code, length, 8, 8, weight, 0, weight_capacity)
+    random_container = Container(random_code, length, weight, 0, weight_capacity)
     return random_container
 

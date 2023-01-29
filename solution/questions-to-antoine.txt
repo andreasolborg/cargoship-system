@@ -1,0 +1,23 @@
+Naming conventions? Camelcase? Underscores? Combination?
+
+What are the main Functionalities?
+[x] Task 1
+[x]  Task 2
+[x]  Task 3
+[x]  Task 4
+[x]  Task 5
+    - Remove some functions, as they are not currently being used
+
+[]  Task 6
+[]  Task 7
+[]  Task 8
+[]  Task 9
+[]  Task 10
+
+What should be tested? And where?
+    - No need for exception handling. Tests in main are ok.
+
+
+Comparing loading a set of containers vs loading a ship
+- 26 seconds to load 6k containers onto  23x22x18 ship
+- ~~0 seconds when loading the ship from a alreay sorted file
