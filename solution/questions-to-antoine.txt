@@ -21,3 +21,6 @@ What should be tested? And where?
 Comparing loading a set of containers vs loading a ship
 - 26 seconds to load 6k containers onto  23x22x18 ship
 - ~~0 seconds when loading the ship from a alreay sorted file
+
+
+Should a 40-feet be named twice? Wouldnt it be better to mark it somewhat different?

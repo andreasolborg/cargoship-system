@@ -50,19 +50,34 @@ class ContainerShip:
     def insert_container(self, container, x, y, z):
         self.containers[x][y][z] = container
     
+    # Remove ("unload") a container from the ship [WORKS WELL] (if it is a 40 feet container, it will remove the 2 cells)
     def remove_container(self, container):
-        topcontainers = self.get_all_top_containers()
-        if container in topcontainers:
-            for height in range(self.height):
-                for width in range(self.width):
-                    for length in range(self.length):
-                        if self.get_nth_container(height, width, length) is container:
-                            self.containers[height][width][length] = None
+        for height in range(self.height):
+            for width in range(self.width):
+                for length in range(self.length):
+                    if self.get_nth_container(height, width, length) is container:
+                        self.insert_container(None, height, width, length)
+                        # If the container is 40 feet long, then we need to remove the 2 cells
+                        if container.get_length() == 40:
+                            self.insert_container(None, height, width, length + 1)
+    
+         
+    def get_container_above(self, container):
+        for height in range(self.height - 1, -1, -1):
+            for width in range(self.width):
+                for length in range(self.length):
+                    if self.get_nth_container(height, width, length) is container:
+                        return self.get_nth_container(height + 1, width, length)
+        return None
+       
+    def remove_container_if_nothing_is_ontop_of_container(self, container):
+        if self.get_container_above(container) is None:
+            self.remove_container(container)
         else:
-            print("The container is not on top of the ship")
-    
-    
-    
+            print("There is a container on top of the container you want to remove")
+        
+        
+
     # Function to get the last element in the 3d list
     def get_highest_level_of_container(self):
         for height in range(self.height - 1, -1, -1):
@@ -72,6 +87,8 @@ class ContainerShip:
                         return height, width, length, self.get_nth_container(height, width, length).get_length()
         return None
     
+    
+    ##### MAY BE REMOVED LATER ########
     # Remove a container from the ship using get_highest_level_of_container function
     def remove_container_at_highest_level(self):
         if(self.get_highest_level_of_container()[3] == 20):
@@ -216,7 +233,7 @@ class ContainerShip:
                 for w in range(self.width):
                     container = self.containers[h][w][l]
                     if container is None:
-                        ship_str += " XX"
+                        ship_str += " XX-XX"
                     else:
                         ship_str += " " + str(container.get_code()) +"-"+ str(container.get_length())
                 ship_str += "\n"
@@ -241,9 +258,36 @@ def main():
     
     small_ship = load_ship_with_containers_from_file("./solution/small_ship_load_3x5x3.tsv")
     print(small_ship)
+    
+    # Remove the containers from the ship
+    top_containers = small_ship.get_all_top_containers()
+    for i in top_containers:
+        small_ship.remove_container(i)
+
+
+    print(small_ship)
+    
+    container = small_ship.get_nth_container(0, 0, 0)
+    print(container)
+    small_ship.remove_container_if_nothing_is_ontop_of_container(container)
+    
+    container = small_ship.get_nth_container(1, 1, 1)
+    small_ship.remove_container_if_nothing_is_ontop_of_container(container)
 
     
-
+    container = small_ship.get_nth_container(0, 0, 0)
+    small_ship.remove_container_if_nothing_is_ontop_of_container(container)
+    print(small_ship)
+    
+    
+    container_set = load_set_of_containers("./solution/small_container_set.tsv")
+    for container in container_set.containers:
+        small_ship.load_container(container)
+    
+    
+    print(small_ship)
+    
+    
 if __name__ == "__main__":
     main()
 
