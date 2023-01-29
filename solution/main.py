@@ -6,7 +6,7 @@ from container_manager import save_set_of_containers, load_set_of_containers
 def main():
     # Generate a set of 10 random containers
     container_set = ContainerSet()
-    container_set.generate_random_containers(1000)
+    container_set.generate_random_containers(1500)
     
     # Save the containers to a file
     save_set_of_containers(container_set, "containers.tsv")
