@@ -29,11 +29,20 @@ class ContainerShip:
         return self.containers[x][y][z]
     
     # Look for the first empty place in the ship where the container can be placed
-    def get_first_empty_place_to_place_container(self):
+    def get_first_empty_place_to_place_a_20_feet_container(self):
         for height in range(self.height):
             for width in range(self.width):
                 for length in range(self.length):
                     if self.get_nth_container(height, width, length) is None:
+                        return height, width, length
+        return None
+            
+
+    def get_first_empty_place_to_place_a_40_feet_container(self):
+        for height in range(self.height):
+            for width in range(self.width):
+                for length in range(self.length - 1): # The container is 2 cells long, so we need to check if the next cell is empty as well
+                    if self.get_nth_container(height, width, length) is None and self.get_nth_container(height, width, length + 1) is None:
                         return height, width, length
         return None
     
@@ -41,18 +50,45 @@ class ContainerShip:
     def insert_container(self, container, x, y, z):
         self.containers[x][y][z] = container
     
-    # Remove ("unload") a container from the ship, and make sure it is on the uppermost layer. You cannot remove a container from the middle of the ship
-    def remove_container(self, x, y, z):
-        if x == self.height - 1:
-            self.containers[x][y][z] = None
+    def remove_container(self, container):
+        topcontainers = self.get_all_top_containers()
+        if container in topcontainers:
+            for height in range(self.height):
+                for width in range(self.width):
+                    for length in range(self.length):
+                        if self.get_nth_container(height, width, length) is container:
+                            self.containers[height][width][length] = None
         else:
-            print("You cannot remove a container from the middle of the ship")
+            print("The container is not on top of the ship")
+    
+    
+    
+    # Function to get the last element in the 3d list
+    def get_highest_level_of_container(self):
+        for height in range(self.height - 1, -1, -1):
+            for width in range(self.width):
+                for length in range(self.length):
+                    if self.get_nth_container(height, width, length) is not None:
+                        return height, width, length, self.get_nth_container(height, width, length).get_length()
+        return None
+    
+    # Remove a container from the ship using get_highest_level_of_container function
+    def remove_container_at_highest_level(self):
+        if(self.get_highest_level_of_container()[3] == 20):
+            self.remove_container_at_position(self.get_highest_level_of_container()[0], self.get_highest_level_of_container()[1], self.get_highest_level_of_container()[2])
+        elif(self.get_highest_level_of_container()[3] == 40):
+            self.remove_container_at_position(self.get_highest_level_of_container()[0], self.get_highest_level_of_container()[1], self.get_highest_level_of_container()[2])
+            self.remove_container_at_position(self.get_highest_level_of_container()[0], self.get_highest_level_of_container()[1], self.get_highest_level_of_container()[2])
+        
+        
+
      
     ################################    Task 5 finished         ######################################
     ################################    Functions for task 7    ######################################
     
     
     ################################    Functions for task 9 (these need further testing)        ######################################
+    
     # The total weight of containers loaded the first, middle and last section of a ship (from the bow to the stern).
     def get_total_weight_of_containers_loaded_in_first_middle_and_last_section(self):
         first_section_weight = 0
@@ -84,7 +120,17 @@ class ContainerShip:
                             portside_weight += (self.get_nth_container(height, width, length).get_weight() + self.get_nth_container(height, width, length).get_cargo())
         return starboard_weight, portside_weight
 
-    
+    # Get the total weight of containers loaded on the ship
+    def get_total_weight_of_containers_loaded_on_ship(self):
+        total_weight = 0
+        for height in range(self.height):
+            for width in range(self.width):
+                for length in range(self.length):
+                    if self.get_nth_container(height, width, length) is not None:
+                        total_weight += self.get_nth_container(height, width, length).get_weight() + self.get_nth_container(height, width, length).get_cargo()
+        return total_weight
+  
+  ############################################################################################################
     
     # Get number of containers in the 3d list
     def get_number_of_containers(self):
@@ -98,7 +144,7 @@ class ContainerShip:
 
 
     # Get all the containers that occur in the nth floor
-    def get_all_containers_in_nth_floor(self, n):
+    def get_all_containers_in_nth_floor_from_top(self, n):
         top_containers = []
         for height in range(self.height):
             for width in range(self.width):
@@ -109,7 +155,7 @@ class ContainerShip:
     
     # Get the top containers in the ship (the ones that are not None in the uppermost layer)
     def get_all_top_containers(self):
-        return self.get_all_containers_in_nth_floor(1)
+        return self.get_all_containers_in_nth_floor_from_top(1)
     
     # Functionalities
     
@@ -123,9 +169,22 @@ class ContainerShip:
                         return
         print("No room for the container")
     
-
-
+    # load containers using get_first_empty_place_to_place_a_20_feet_container function, get_first_empty_place_to_place_a_40_feet_container function, and insert_container function
     def load_container(self, container):
+        container_length = container.get_length()
+        if container_length == 20:
+            if self.get_first_empty_place_to_place_a_20_feet_container() is not None:
+                h, w, l = self.get_first_empty_place_to_place_a_20_feet_container()
+                self.insert_container(container, h, w, l)
+        elif container_length == 40:
+            if self.get_first_empty_place_to_place_a_40_feet_container() is not None:
+                h, w, l = self.get_first_empty_place_to_place_a_40_feet_container()
+                self.insert_container(container, h, w, l)
+                self.insert_container(container, h, w, l + 1)
+            
+        
+
+    def load_container1(self, container):
         container_length = container.get_length()
         if container_length == 20:
             for height in range(self.height):
@@ -159,7 +218,7 @@ class ContainerShip:
                     if container is None:
                         ship_str += " XX"
                     else:
-                        ship_str += " " + str(container.get_code())
+                        ship_str += " " + str(container.get_code()) +"-"+ str(container.get_length())
                 ship_str += "\n"
             ship_str += "\n"
         return ship_str
@@ -171,36 +230,17 @@ def sort_containers_in_set_by_weight(ship, container_set):
     
     
 def initialize_ship():
-    ship = ContainerShip(23, 22, 18) # dimensions of the ship (length, width, height)
+    ship = ContainerShip(3, 5, 3) # dimensions of the ship (length, width, height)
     container_set = load_set_of_containers("./solution/containers.tsv")
-    container_set.containers = sorted(container_set.containers, key=lambda x: x.get_weight(), reverse=True)
+    #container_set.containers = sorted(container_set.containers, key=lambda x: x.get_weight(), reverse=True)
     ship.load_container_from_set_of_containers(container_set)
-    save_ship_with_containers_to_file(ship, "./solution/ship_load.tsv")
+    save_ship_with_containers_to_file(ship, "./solution/small_ship_load.tsv")
 
 def main():
     #initialize_ship()
-    ship = load_ship_with_containers_from_file("./solution/ship_load.tsv")
     
-    
-
-    
-    
-    
-    
-    #save_ship_with_containers_to_file(ship, "./solution/ship_load.tsv")
-    
-    # Print total weight of containers loaded on starboard and portside formatted as a string
-    starboard_weight, portside_weight = ship.get_total_weight_of_containers_loaded_on_starboard_and_portside()
-    print("Total weight of containers loaded on starboard: " + str(starboard_weight))
-    print("Total weight of containers loaded on portside: " + str(portside_weight))
-    
-    # Print total weight in the front middle and back of the ship formatted as a string
-    front_weight, middle_weight, back_weight = ship.get_total_weight_of_containers_loaded_in_first_middle_and_last_section()
-    print("Total weight of containers loaded in front: " + str(front_weight))
-    print("Total weight of containers loaded in middle: " + str(middle_weight))
-    print("Total weight of containers loaded in back: " + str(back_weight))
-
-    
+    small_ship = load_ship_with_containers_from_file("./solution/small_ship_load_3x5x3.tsv")
+    print(small_ship)
 
     
 
