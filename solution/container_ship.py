@@ -267,12 +267,14 @@ def main():
 
     print(small_ship)
     
-    container = small_ship.get_nth_container(1, 0, 0)
+    container = small_ship.get_nth_container(0, 0, 0)
     print(container)
     small_ship.remove_container_if_nothing_is_ontop_of_container(container)
     
-    container = small_ship.get_nth_container(1, 1, 1)
+    container = small_ship.get_nth_container(1, 0, 0)
     small_ship.remove_container_if_nothing_is_ontop_of_container(container)
+    print(container)
+    print(small_ship)
 
     
     container = small_ship.get_nth_container(0, 0, 0)
