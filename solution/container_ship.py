@@ -247,8 +247,8 @@ def sort_containers_in_set_by_weight(ship, container_set):
     
     
 def initialize_ship():
-    ship = ContainerShip(23, 22, 18) # dimensions of the ship (length, width, height)
-    container_set = load_set_of_containers("./solution/containers.tsv")
+    ship = ContainerShip(23, 21, 35) # dimensions of the ship (length, width, height)
+    container_set = load_set_of_containers("./solution/set_of_10k_containers.tsv")
     #container_set.containers = sorted(container_set.containers, key=lambda x: x.get_weight(), reverse=True)
     ship.load_container_from_set_of_containers(container_set)
     save_ship_with_containers_to_file(ship, "./solution/ship_load.tsv")
