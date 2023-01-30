@@ -247,48 +247,18 @@ def sort_containers_in_set_by_weight(ship, container_set):
     
     
 def initialize_ship():
-    ship = ContainerShip(3, 5, 3) # dimensions of the ship (length, width, height)
+    ship = ContainerShip(23, 22, 18) # dimensions of the ship (length, width, height)
     container_set = load_set_of_containers("./solution/containers.tsv")
     #container_set.containers = sorted(container_set.containers, key=lambda x: x.get_weight(), reverse=True)
     ship.load_container_from_set_of_containers(container_set)
-    save_ship_with_containers_to_file(ship, "./solution/small_ship_load.tsv")
+    save_ship_with_containers_to_file(ship, "./solution/ship_load.tsv")
+    return ship
 
 def main():
-    #initialize_ship()
-    
-    small_ship = load_ship_with_containers_from_file("./solution/small_ship_load_3x5x3.tsv")
-    print(small_ship)
-    
-    # Remove the containers from the ship
-    top_containers = small_ship.get_all_top_containers()
-    for i in top_containers:
-        small_ship.remove_container(i)
-
-
-    print(small_ship)
-    
-    container = small_ship.get_nth_container(0, 0, 0)
-    print(container)
-    small_ship.remove_container_if_nothing_is_ontop_of_container(container)
-    
-    container = small_ship.get_nth_container(1, 0, 0)
-    small_ship.remove_container_if_nothing_is_ontop_of_container(container)
-    print(container)
-    print(small_ship)
-
-    
-    container = small_ship.get_nth_container(0, 0, 0)
-    small_ship.remove_container_if_nothing_is_ontop_of_container(container)
-    print(small_ship)
+    ship = initialize_ship()
     
     
-    container_set = load_set_of_containers("./solution/small_container_set.tsv")
-    for container in container_set.containers:
-        small_ship.load_container(container)
-    
-    
-    print(small_ship)
-    
+    print(ship)
     
 if __name__ == "__main__":
     main()
