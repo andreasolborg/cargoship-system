@@ -9,6 +9,11 @@ class ContainerShip:
         self.width = width
         self.height = height
         self.containers = [[[None for z in range(self.length)] for y in range(self.width)] for x in range(self.height)]
+        self.empty_spaces = []
+        for x in range(self.height):
+            for y in range(self.width):
+                for z in range(self.length):
+                    self.empty_spaces.append((x, y, z))
 
     def get_ship_length(self):
         return self.length 
@@ -28,27 +33,24 @@ class ContainerShip:
     def get_nth_container(self, x, y, z):
         return self.containers[x][y][z]
     
-    # Look for the first empty place in the ship where the container can be placed
+      # Look for the first empty place in the ship where the container can be placed
     def get_first_empty_place_to_place_a_20_feet_container(self):
-        for height in range(self.height):
-            for width in range(self.width):
-                for length in range(self.length):
-                    if self.get_nth_container(height, width, length) is None:
-                        return height, width, length
+        if self.empty_spaces:
+            return self.empty_spaces.pop(0)
         return None
             
-
     def get_first_empty_place_to_place_a_40_feet_container(self):
-        for height in range(self.height):
-            for width in range(self.width):
-                for length in range(self.length - 1): # The container is 2 cells long, so we need to check if the next cell is empty as well
-                    if self.get_nth_container(height, width, length) is None and self.get_nth_container(height, width, length + 1) is None:
-                        return height, width, length
+        for i in range(len(self.empty_spaces) - 1):
+            if self.empty_spaces[i + 1][0] == self.empty_spaces[i][0] and self.empty_spaces[i + 1][1] == self.empty_spaces[i][1] and self.empty_spaces[i + 1][2] == self.empty_spaces[i][2] + 1:
+                x, y, z = self.empty_spaces.pop(i)
+                self.empty_spaces.pop(i)
+                return x, y, z
         return None
     
     # Insert ("load") a container in the ship
     def insert_container(self, container, x, y, z):
         self.containers[x][y][z] = container
+        self.empty_spaces = [(x_, y_, z_) for x_, y_, z_ in self.empty_spaces if x_ != x or y_ != y or z_ != z]
     
     # Remove ("unload") a container from the ship [WORKS WELL] (if it is a 40 feet container, it will remove the 2 cells)
     def remove_container(self, container):
@@ -247,47 +249,16 @@ def sort_containers_in_set_by_weight(ship, container_set):
     
     
 def initialize_ship():
-    ship = ContainerShip(3, 5, 3) # dimensions of the ship (length, width, height)
+    ship = ContainerShip(23, 22, 18) # dimensions of the ship (length, width, height)
     container_set = load_set_of_containers("./solution/containers.tsv")
     #container_set.containers = sorted(container_set.containers, key=lambda x: x.get_weight(), reverse=True)
     ship.load_container_from_set_of_containers(container_set)
-    save_ship_with_containers_to_file(ship, "./solution/small_ship_load.tsv")
+    save_ship_with_containers_to_file(ship, "./solution/ship_load.tsv")
 
 def main():
-    #initialize_ship()
+    initialize_ship()
     
-    small_ship = load_ship_with_containers_from_file("./solution/small_ship_load_3x5x3.tsv")
-    print(small_ship)
-    
-    # Remove the containers from the ship
-    top_containers = small_ship.get_all_top_containers()
-    for i in top_containers:
-        small_ship.remove_container(i)
-
-
-    print(small_ship)
-    
-    container = small_ship.get_nth_container(0, 0, 0)
-    print(container)
-    small_ship.remove_container_if_nothing_is_ontop_of_container(container)
-    
-    container = small_ship.get_nth_container(1, 0, 0)
-    small_ship.remove_container_if_nothing_is_ontop_of_container(container)
-    print(container)
-    print(small_ship)
-
-    
-    container = small_ship.get_nth_container(0, 0, 0)
-    small_ship.remove_container_if_nothing_is_ontop_of_container(container)
-    print(small_ship)
-    
-    
-    container_set = load_set_of_containers("./solution/small_container_set.tsv")
-    for container in container_set.containers:
-        small_ship.load_container(container)
-    
-    
-    print(small_ship)
+    #small_ship = load_ship_with_containers_from_file("./solution/small_ship_load_3x5x3.tsv")
     
     
 if __name__ == "__main__":
