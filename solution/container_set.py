@@ -3,6 +3,9 @@ from container import generate_random_container
 class ContainerSet:
     def __init__(self):
         self.containers = []
+    
+    def get_containers(self):
+        return self.containers
         
     def add_container(self, container):
         if self.find_container(container.code) == None: # We need this, because two containers can't have the same code

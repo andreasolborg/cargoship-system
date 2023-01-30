@@ -26,6 +26,9 @@ class Container:
     def get_weight_capacity(self):
         return self.weight_capacity
 
+    def get_total_weight(self):
+        return self.weight + self.cargo
+
     # Set functions
     def set_code(self, code):
         self.code = code

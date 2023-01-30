@@ -11,8 +11,8 @@ def main():
     # Save the containers to a file
     
     # Load the containers from the file
-    #container_set = load_set_of_containers("./solution/containers.tsv")
-    save_set_of_containers(container_set, "./solution/set_of_6k_containers.tsv")
+    #container_set = load_set_of_containers("./solution/set_of_containers/containers.tsv")
+    save_set_of_containers(container_set, "./solution/set_of_containers/set_of_6k_containers.tsv")
     print(len(container_set.containers))
 
 

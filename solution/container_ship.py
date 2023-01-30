@@ -2,6 +2,10 @@ from container import *
 from container_set import *
 from container_set_manager import *
 from container_ship_manager import *
+import time
+import numpy as np
+start_time = time.time()
+
 
 class ContainerShip:
     def __init__(self, length, width, height):
@@ -227,7 +231,7 @@ class ContainerShip:
                             return
                         
     def load_container_from_set_of_containers(self, container_set):
-        for container in container_set.containers:
+        for container in container_set:
             self.load(container)
     
                         
@@ -242,7 +246,7 @@ class ContainerShip:
                     if container is None:
                         ship_str += " XX-XX"
                     else:
-                        ship_str += " " + str(container.get_code()) +"-"+ str(container.get_length())
+                        ship_str += " " + str(container.get_code()) + " " +str(container.get_total_weight()) +" "+ str(container.get_length()) + " - "
                 ship_str += "\n"
             ship_str += "\n"
         return ship_str
@@ -254,25 +258,33 @@ class ContainerShip:
 
 
 
-def sort_containers_in_set_by_weight(ship, container_set):  
-    container_set.containers = sorted(container_set.containers, key=lambda x: x.get_weight(), reverse=True)
-    
+    def sort_containers_in_set_by_weight(self, container_set): # sort containers in set by total_weight using numpy. If container.get_length() == 40: container.getTotalWeight()/2 else container.get_total_weight() for container in containersList])
+        sorted_list = []
+        containers = container_set.containers
+        for container in containers:
+            if container.get_length() == 40:
+                sorted_list.append(container.get_total_weight()/2)
+            else:
+                sorted_list.append(container.get_total_weight())
+        sorted_list = np.array(sorted_list)
+        sorted_list.sort()
+        return sorted_list
     
 def initialize_ship():
-    ship = ContainerShip(23, 22, 18) # dimensions of the ship (length, width, height)
-    container_set = load_set_of_containers("./solution/set_of_10k_containers.tsv")
-    container_set.containers = sorted(container_set.containers, key=lambda x: x.get_weight(), reverse=True)
-    ship.load_container_from_set_of_containers(container_set)
-    save_ship_with_containers_to_file(ship, "./solution/ship_load.tsv")
+    ship = ContainerShip(23, 14, 18) # dimensions of the ship (length, width, height)
+    container_set = load_set_of_containers("./solution/set_of_containers/set_of_6k_containers.tsv")
+    #sorted_container_set = ship.sort_containers_in_set_by_weight(container_set)
+    ship.load_container_from_set_of_containers(container_set.containers)
+    save_ship_with_containers_to_file(ship, "./solution/set_of_containers/ship_load.tsv")
     return ship
 
 def main():
-    #ship = initialize_ship()
+    ship = initialize_ship()
     
-    
-    ship = load_ship_with_containers_from_file("./solution/ship_load.tsv")
+    #ship = load_ship_with_containers_from_file("./solution/ship_load.tsv")
     print(ship)
-    ship.tostring()
+    
+    print("--- %s seconds ---" % (time.time() - start_time))
 
     #Remove a container from the ship
     
