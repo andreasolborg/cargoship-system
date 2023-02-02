@@ -25,3 +25,19 @@ Comparing loading a set of containers vs loading a ship
 
 Should a 40-feet be named twice? Wouldnt it be better to mark it somewhat different?
 
+
+
+Cannot sort the list before you load it into the ship
+- 2 and 2 are paired lists?
+20 feet comes in pairs, so we need to hold them in a list
+bin packing
+hold list
+multiply cargo of 20 feet to sort
+always load onto the lightest section
+
+
+insert and remove can be done in O(1) time, but if used we need to reflect on it
+
+We can make assumptions that a ship would not leave the port unless the ship is full
+
+en liste for hver søyle i skipet

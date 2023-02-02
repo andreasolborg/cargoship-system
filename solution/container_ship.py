@@ -141,7 +141,6 @@ class ContainerShip:
         return total_weight
   
   ############################################################################################################
-    
     # Get number of containers in the 3d list
     def get_number_of_containers(self):
         set_of_container_codes = set()
@@ -166,8 +165,7 @@ class ContainerShip:
     def get_all_top_containers(self):
         return self.get_all_containers_in_nth_floor_from_top(1)
     
-    # Functionalities
-    
+    # Functionalities   
     # Pushes container to the end of the 3d-list
     def push_container(self, container):
         for height in range(self.height):
