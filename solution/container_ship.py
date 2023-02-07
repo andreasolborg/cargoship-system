@@ -2,6 +2,7 @@ from container import *
 from container_set import *
 from container_set_manager import *
 from container_ship_manager import *
+from section import *
 import time
 import numpy as np
 start_time = time.time()
@@ -18,6 +19,9 @@ class ContainerShip:
             for width in range(self.width):
                 for length in range(self.length):
                     self.empty_places.append((height, width, length))
+        self.sections = []
+        self.section_width = width // 2 
+        self.section_length = length // 3
 
     def get_ship_length(self):
         return self.length 
@@ -269,19 +273,26 @@ class ContainerShip:
         return sorted_list
     
 def initialize_ship():
-    ship = ContainerShip(23, 14, 18) # dimensions of the ship (length, width, height)
+    ship = ContainerShip(12, 8, 3) # dimensions of the ship (length, width, height)
     container_set = load_set_of_containers("./solution/set_of_containers/set_of_6k_containers.tsv")
     #sorted_container_set = ship.sort_containers_in_set_by_weight(container_set)
-    ship.load_container_from_set_of_containers(container_set.containers)
-    save_ship_with_containers_to_file(ship, "./solution/set_of_containers/ship_load.tsv")
+    #ship.load_container_from_set_of_containers(container_set.containers)
+    #save_ship_with_containers_to_file(ship, "./solution/set_of_containers/ship_load.tsv")
     return ship
 
 def main():
     ship = initialize_ship()
     
     #ship = load_ship_with_containers_from_file("./solution/ship_load.tsv")
-    print(ship)
+    #make the sections of the ship from the section.py file
+    for i in range(ship.section_length*ship.section_width):
+        ship.sections.append(ShipSection(ship, ship.section_length, ship.section_width))
+
+    for section in ship.sections:
+        print(section.stacks)
+
     
+
     print("--- %s seconds ---" % (time.time() - start_time))
 
     #Remove a container from the ship
