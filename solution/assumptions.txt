@@ -68,5 +68,61 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
 
 
 
-## TO-DO:
-- Implement number of operations logics
+################################## TO DO ##################################
+## OVERALL
+
+
+## SHIP:
+    [] Implement number of operations logics
+    [] Implement "find-lightest-section" function
+    [] Implement "is_ship_balanced" function
+        [] implement error handling for this
+    [] Implement "is_ship_full" function
+        [] implement error handling for this
+    [] Implement "add_container" function
+        [] Add to lightest section
+        [] Add to lightest stack
+        [] Add to lightest stack in lightest section
+    [] Implement "remove_container" function
+        [] Remove from heaviest section
+        [] Remove from heaviest stack
+        [] Remove from heaviest stack in heaviest section
+
+
+## CONTAINER:
+    [] Test container class
+        [] Test container constructor
+        [] Test container methods
+    [] Remove unused methods
+
+
+## CONTAINER STACK:
+    [] Move the temporary holding list for 20-feet containers to the ship-section class
+    [] If time:
+        [] A single container in a pair can be changed such that it is more balanced
+    [] 
+    
+    
+## SHIP SECTION:
+    [] Implement find lightest stack
+    [] MUST BE TESTED WITH A SET OF CONTAINERS
+
+
+
+## ERROR HANDLING:
+- Implement error handling for adding container to a full stack (function)
+- Implement error handling for removing container from an empty stack (function)
+- Implement error handling for adding container to a full ship (function)
+- Implement error handling for removing container from an empty ship (function)
+- Implement error handling for adding container to a section that is full (function)
+- Implement error handling for removing container from a section that is empty (function)
+
+
+
+## Asssumptions
+- A 40-feet container must be placed either directly ontop of 2 consecutive 20-feet container or directly ontop of a 40-feet container.
+- 20-feet containers comes in fixed pairs. After they are "glued" together, they cannot be separated, and is treated like a single 40-feet container.
+
+
+
+# TEST 1K EMPTY -> THEN 1K FULL -> THEN 1K EMPTY, what is the number of operations?

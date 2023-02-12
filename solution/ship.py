@@ -3,6 +3,7 @@ from container_set import *
 from container_set_manager import *
 from container_ship_manager import *
 from section import *
+from container_stack import *
 import time
 import numpy as np
 start_time = time.time()
@@ -17,6 +18,7 @@ class ContainerShip:
         self.section_width = width // 2 
         self.section_length = length // 3
         self.section_height = height
+
 
     def get_ship_length(self):
         return self.length 
