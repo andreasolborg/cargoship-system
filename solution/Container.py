@@ -31,35 +31,26 @@ class Container:
         return self.weight + self.cargo
       
     # Set functions
-    def set_code(self, code):
-        self.code = code
-
-    def set_length(self, length):
-        self.length = length
-
+    
     def set_cargo(self, cargo):
+        if cargo > self.weight_capacity:
+            raise Exception("Cargo is too heavy")
         self.cargo = cargo
-
-    def set_weight(self, weight):
-        self.weight = weight
-
-    def set_weight_capacity(self, weight_capacity):
-        self.weight_capacity = weight_capacity
 
     # tostring
     def __str__(self) -> str:
-        return f"Container: {self.code}, length: {self.length}, total container weight {self.weight + self.cargo}, {self.weight_capacity} tons capacity"
+        return f"ContainerID: {self.code}, length: {self.length}, Total weight: {self.weight}+{self.cargo}={self.weight+self.cargo}, {self.weight_capacity} weight capacity"
 
     # tostring for list of containers
     def __repr__(self) -> str:
-        return f"C: {self.code} W: {self.weight + self.cargo}, L: {self.length}"
+        return f"C:{self.get_code()} L:{self.get_length()} W:{self.get_cargo()} TW:{self.get_total_weight()}"
 
 
-def createContainerCode():
-    if not hasattr(createContainerCode, "counter"):
-        createContainerCode.counter = 1
-    id = str(createContainerCode.counter).zfill(2)
-    createContainerCode.counter += 1
+def create_container_code():
+    if not hasattr(create_container_code, "counter"):
+        create_container_code.counter = 1
+    id = str(create_container_code.counter).zfill(2)
+    create_container_code.counter += 1
     return id
 
 
@@ -71,7 +62,7 @@ def generate_random_container():
     possible_containers = [[20, 2, 20], [40, 4, 22]]
     random_container_ = random.choice(possible_containers)
 
-    random_code = createContainerCode()
+    random_code = create_container_code()
     length = random_container_[0]
     weight = random_container_[1]
     weight_capacity = random_container_[2]
@@ -80,11 +71,12 @@ def generate_random_container():
     random_container = Container(random_code, length, weight, random.randint(0, weight_capacity), weight_capacity) ## random.randint(0, weight_capacity) is the cargo weight (loaded weight) make it a function
     return random_container
 
-def generate_list_of_random_containers(n):
-    list_of_containers = []
-    for _ in range(n):
-        list_of_containers.append(generate_random_container())
-    return list_of_containers
+
+# def generate_list_of_random_containers(n):
+#     list_of_containers = []
+#     for _ in range(n):
+#         list_of_containers.append(generate_random_container())
+#     return list_of_containers
 
 def main():
     # Task 2.1.1
@@ -105,9 +97,11 @@ def main():
     # Create a list of 10 random containers
     # Print the list
     list_of_containers = []
-    for _ in range(20000):
+    for _ in range(100):
         list_of_containers.append(generate_random_container())
     # print(list_of_containers)
+
+    print(list_of_containers)
 
 
     print(time.time() - start)

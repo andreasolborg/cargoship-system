@@ -41,3 +41,11 @@ insert and remove can be done in O(1) time, but if used we need to reflect on it
 We can make assumptions that a ship would not leave the port unless the ship is full
 
 en liste for hver søyle i skipet
+
+
+
+TASKS ONE BY ONE
+Task 1:
+    Solved in Container class
+Task 2:
+    Solved in ContainerSet class

@@ -96,11 +96,10 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
     [] Remove unused methods
 
 
-## CONTAINER STACK:
+## CONTAINER STACK: <------------ FINISHED -----------> 
     [] Move the temporary holding list for 20-feet containers to the ship-section class
     [] If time:
         [] A single container in a pair can be changed such that it is more balanced
-    [] 
     
     
 ## SHIP SECTION:
@@ -126,3 +125,7 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
 
 
 # TEST 1K EMPTY -> THEN 1K FULL -> THEN 1K EMPTY, what is the number of operations?
+
+
+Finished:
+[x] Stack number of operations
