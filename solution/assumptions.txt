@@ -77,12 +77,12 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
     [] Implement "find-lightest-section" function
     [] Implement "is_ship_balanced" function
         [] implement error handling for this
-    [] Implement "is_ship_full" function
-        [] implement error handling for this
-    [] Implement "add_container" function
-        [] Add to lightest section
-        [] Add to lightest stack
-        [] Add to lightest stack in lightest section
+    [x] Implement "is_ship_full" function
+        [x] implement error handling for this
+    [x] Implement "add_container" function
+        [x] Add to lightest section
+        [x] Add to lightest stack
+        [x] Add to lightest stack in lightest section
     [] Implement "remove_container" function
         [] Remove from heaviest section
         [] Remove from heaviest stack
@@ -128,4 +128,5 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
 
 
 Finished:
-[x] Stack number of operations
+[x] Stack number of operations ==> Crane task(s) done
+[x] Save ship to file

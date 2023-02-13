@@ -1,12 +1,12 @@
 import time
 
 import numpy as np
-from container import *
-from container_set import *
-from container_set_manager import *
-from container_ship_manager import *
-from container_stack import *
-from section import *
+from Container import *
+from ContainerSet import *
+from ContainerSetManager import *
+from ContainerShipManager import *
+from ContainerStack import *
+from ContainerSection import *
 
 
 class ContainerShip:
@@ -40,11 +40,11 @@ class ContainerShip:
         return self.sections[sectionID]
     
     def get_number_of_operations(self):
-        for section in self.available_sections:
+        for section in self.get_sections():
             self.number_of_operations += section.get_number_of_operations_in_section()
         return self.number_of_operations
-        
 
+        
     def get_lightest_section(self):
         lightest_section = self.available_sections[0]
         for section in self.available_sections:
@@ -54,19 +54,30 @@ class ContainerShip:
 
     def add_container(self, container):
         if len(self.available_sections) == 0:                   # if there is no available section
-            raise Exception("Ship is full")                               
+            raise Exception("Ship is full, no available section(s). Could not add container with ID: " + container.get_code(), "Stop adding containers.")                            
         else:
             lightest_section = self.get_lightest_section()      # get the lightest section
             if lightest_section.is_section_full() == True:
                 self.available_sections.remove(lightest_section)
                 self.full_sections.append(lightest_section)
-                self.add_container(container)
+                self.add_container(container)                   # Try to add container again to the lightest section
             else:
                 lightest_section.add_container_to_section(container)
-            
-                   
 
-        
+    def find_container(self, container_code):
+        holding_container = []
+        for section in self.get_sections():
+                for stacks in section.get_container_stacks():
+                    for containers in stacks.get_containers():
+                        for container in containers:
+                            if container.get_code() == container_code:
+                                print("Container "+ container.get_code() + " found in section " + str(section.get_sectionID()) + " stack " + str(stacks.get_location_in_section()) + " container " + str(containers.index(container)))
+                                return container
+        return None
+
+    
+            
+    
     def __str__(self) -> str:
         pass
 
@@ -94,30 +105,35 @@ def main2():
     #loaded_container_set = load_set_of_containers("./solution/set_of_containers/set_of_6k_containers.tsv")
     #random.seed(42069)
     container_set = ContainerSet()
-    container_set.generate_random_containers(10000)
+    set_size = 500
+    container_set.generate_random_containers(set_size)
+    print("Number of containers: " + str(len(container_set.containers)))
 
     # Load up sections
     try :
         for container in container_set.containers:
+            # print("Adding container: " + container.get_code(), "total weight: " + str(container.get_total_weight()))
             ship.add_container(container)
     except Exception as e:
         print(e)
     
-
-    # Print sections
-    # for i in range(0, 6):
-    #     print("Section " + str(i+1) + " weight: " + str(ship.sections[i].get_section_weight()),
-    #           "containers: " + str(ship.sections[i].get_number_of_containers()) + "\n" + str(ship.sections[i]), "size of available stack: " + str(len(ship.sections[i].get_available_container_stacks())))
-
+    ship.find_container("0001")
+    ship.find_container("0865")
+    
+    for section in ship.get_sections():
+        print(section)
 
     
     # Pretty print the ships sections
     # for i in range(0, 6):
     #     print("Section " + str(i+1) + " weight: " + str(ship.full_sections[i].get_section_weight()), "containers: " + str(ship.full_sections[i].get_number_of_containers()) + "\n" + str(ship.full_sections[i]), "size of available stack: " + str(len(ship.full_sections[i].get_available_container_stacks())))
     
-    print(ship.full_sections[0], "\t", ship.full_sections[2], "\t", ship.full_sections[4])
-    print(ship.full_sections[1], "\t", ship.full_sections[3], "\t", ship.full_sections[5])
+    # print(ship.full_sections[0], "\t", ship.full_sections[2], "\t", ship.full_sections[4])
+    # print(ship.full_sections[1], "\t", ship.full_sections[3], "\t", ship.full_sections[5])
     
+    
+    #save_ship_with_containers_to_file(ship, "./saved_ships/set_of_{set_size}_containers.tsv".format(set_size=set_size))
+
             
         
 

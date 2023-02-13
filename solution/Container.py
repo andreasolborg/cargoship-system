@@ -48,8 +48,8 @@ class Container:
 
 def create_container_code():
     if not hasattr(create_container_code, "counter"):
-        create_container_code.counter = 1
-    id = str(create_container_code.counter).zfill(2)
+        create_container_code.counter = 0
+    id = "{:04d}".format(create_container_code.counter)
     create_container_code.counter += 1
     return id
 
@@ -67,16 +67,9 @@ def generate_random_container():
     weight = random_container_[1]
     weight_capacity = random_container_[2]
 
-    # The loaded weight should be 0
     random_container = Container(random_code, length, weight, random.randint(0, weight_capacity), weight_capacity) ## random.randint(0, weight_capacity) is the cargo weight (loaded weight) make it a function
     return random_container
 
-
-# def generate_list_of_random_containers(n):
-#     list_of_containers = []
-#     for _ in range(n):
-#         list_of_containers.append(generate_random_container())
-#     return list_of_containers
 
 def main():
     # Task 2.1.1

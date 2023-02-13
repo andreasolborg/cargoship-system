@@ -1,4 +1,4 @@
-from container import *
+from Container import *
 
 class ContainerStack:
     def __init__(self, sectionID, location_in_section, max_stack_height):
@@ -90,7 +90,6 @@ class ContainerStack:
     def push_container_to_stack(self, container):
         if len(self.containers) == self.max_stack_height:
             raise Exception("Container stack is full")
-
         if type(container) is not list:
             container = [container]
 
@@ -255,6 +254,11 @@ def main():
     
     # Print the stack, and the operation counter. Should be 197
     print(stack2)
+    for container in stack2.containers:
+        for c in container:
+            print(c)
+    
+    print(stack2.get_containers())
 
 
     

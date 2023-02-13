@@ -1,7 +1,7 @@
-from container import Container
-from container_stack import ContainerStack
-from container_set_manager import *
-from container_set import *
+from Container import Container
+from ContainerStack import ContainerStack
+from ContainerSetManager import *
+from ContainerSet import *
 
 import random
 
@@ -53,6 +53,13 @@ class ShipSection:
 
     def get_number_of_operations(self):
         return self.number_of_operations
+
+    def get_holding_container(self):
+        return self.holding_containers
+    
+    def get_container_stacks(self):
+        return self.available_container_stacks + self.full_container_stacks
+    
 
     # Get section weight by adding up the weight of all stacks in full and available stacks
     def get_section_weight(self):
@@ -130,17 +137,17 @@ class ShipSection:
                 self.available_container_stacks.remove(container_stack)
                 self.is_section_full()
             else:
-                print(container," section id",  self.sectionID)
+                #print(container," section id",  self.sectionID)
                 if container.get_length() == 20 and self.holding_containers == []:
                     self.holding_containers.append(container)
-                    print(self.holding_containers)
+                    #print(self.holding_containers)
                     
                     #print("Holding 1 20 footer for now" , self.holding_containers)
                 elif container.get_length() == 20 and self.holding_containers != []:
                     self.holding_containers.append(container)
                     #print("adding 2 20 footers", self.holding_containers)
                     container_stack.add_container_to_stack([self.holding_containers[0], self.holding_containers[1]])
-                    print(self.holding_containers)
+                    # print(self.holding_containers)
                     self.holding_containers = []
                 elif container.get_length() == 40:
                     container_stack.add_container_to_stack(container)
@@ -151,27 +158,29 @@ class ShipSection:
         
     def get_number_of_operations_in_section(self):
         counter = 0
-        for stack in self.available_container_stacks + self.full_container_stacks:
+        for stack in self.get_container_stacks():
             counter += stack.get_number_of_operations()
         return counter
             
     # tostring to print the section as a 2d grid of the length of each stack in both available and full stacks
     def __str__(self) -> str:
-        return_string = "Weight:[height]\n"
+        return_string =  "Section ID: " + str(self.sectionID) + "\n#OPERATIONS:[height]-[WEIGHT]\n"
+
         total = 0
         for y in range(0, self.section_width):
             for x in range(0, self.section_length):
                 for stack in self.available_container_stacks:
                     if stack.location_in_section == (x, y):
-                        return_string += str(stack.get_number_of_operations()) + "[" + str(stack.get_stack_height()) + "]" + "W[" + str(stack.get_stack_weight()) + "] "
+                        return_string += str(stack.get_number_of_operations()) + ":[" + str(stack.get_stack_height()) + "]" + "-[" + str(stack.get_stack_weight()) + "] "
                         total += stack.get_stack_weight()
                 for stack in self.full_container_stacks:
                     if stack.location_in_section == (x, y):
-                        return_string += str(stack.get_number_of_operations()) + "[" + str(stack.get_stack_height()) + "]" + "W[" + str(stack.get_stack_weight()) + "] "
+                        return_string += str(stack.get_number_of_operations()) + ":[" + str(stack.get_stack_height()) + "]" + "-[" + str(stack.get_stack_weight()) + "] "
                         total += stack.get_stack_weight()
             return_string += "\n"
             
         return_string += "Total section weight: " + str(total) + "\n"
+        return_string += "Total number of operations: " + str(self.get_number_of_operations_in_section()) + "\n"
         return return_string
     
 
@@ -222,7 +231,6 @@ def main():
     # print(section.get_number_of_operations_in_section(), "is the number of operations in the section")
     # print(section.get_section_weight(), "is the section weight")
     # print(section.get_lightest_container_stack(), "is the lightest stack")
-    print(section)
     print(section.get_number_of_operations_in_section(), "is the number of operations in the section")
 
 
