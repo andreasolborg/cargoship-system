@@ -74,7 +74,7 @@ class ShipSection:
     def get_lightest_container_stack(self):
         lightest_stack = self.available_container_stacks[0]
         for stack in self.available_container_stacks:
-            if stack.get_stack_weight() <= lightest_stack.get_stack_weight():
+            if stack.get_stack_weight() < lightest_stack.get_stack_weight():
                 lightest_stack = stack
         return lightest_stack
     
@@ -98,6 +98,8 @@ class ShipSection:
     def is_section_full(self):
         if len(self.available_container_stacks) == 0:
             return True
+        else:
+            return False
     
 
     # Set functions
@@ -135,7 +137,8 @@ class ShipSection:
             if container_stack.container_stack_is_full() == True:
                 self.full_container_stacks.append(container_stack)
                 self.available_container_stacks.remove(container_stack)
-                self.is_section_full()
+                if self.is_section_full() == False:
+                    self.add_container_to_section(container) 
             else:
                 #print(container," section id",  self.sectionID)
                 if container.get_length() == 20 and self.holding_containers == []:

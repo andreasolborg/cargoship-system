@@ -34,10 +34,16 @@ def save_ship_with_containers_to_file(ship, file_path):
                     file.write("Stack at ({}, {}), in section: {}\n".format(x, y, section.get_sectionID()))
                     file.write("(x,\t y,\t z)\tcode\tlength\tweight\tcargo\tTW\tcargo capacity\n")
                     for z in range(z_max):
-                        container = stack.get_container(z)
-                        for c in container:
-                            file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(x, y, z, c.get_code(), c.get_length(), c.get_weight(), c.get_cargo(), c.get_total_weight(), c.get_weight_capacity()))
-                            
+                        try:
+                            container = stack.get_container(z)
+                            for c in container:
+                                file.write("({},\t {},\t {})\t{}\t{}\t{}\t{}\t{}\t{}\n".format(x, y, z, c.get_code(), c.get_length(), c.get_weight(), c.get_cargo(), c.get_total_weight(), c.get_weight_capacity()))
+                        except IndexError:
+                            file.write("({},\t {},\t {})\t{}\t{}\t{}\t{}\t{}\t{}\n".format(x, y, z, "None", "None", "None", "None", "None", "None"))
+
+            file.write("--------------------\n")
+        file.close()
+                       
     file.close()
 
 # We dont need to check for the length of the container, because the ship_load.tsv file is already correct
