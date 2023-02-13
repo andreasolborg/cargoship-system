@@ -1,5 +1,4 @@
 from Container import Container
-from ContainerShipRevised import ContainerShip
 
 # TASK 6
 # Save the ship to a file with the containers on it as well as the ship dimensions and the container information (code, length, weight, cargo, cargo capacity)

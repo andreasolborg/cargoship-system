@@ -65,6 +65,7 @@ class ContainerShip:
             else:
                 lightest_section.add_container_to_section(container)
 
+    #Reimplement to improve performance
     def find_container(self, container_code):
         holding_container = []
         for section in self.get_sections():
@@ -74,7 +75,7 @@ class ContainerShip:
                             if container.get_code() == container_code:
                                 print("Container "+ container.get_code() + " found in section " + str(section.get_sectionID()) + " stack " + str(stacks.get_location_in_section()) + " container " + str(containers.index(container)+1), "(means the container is the " + str(containers.index(container)+1) + "th container in the stack)")
                                 return container
-        return None
+        return "Container with id {} not found in the ship.".format(container_code)
 
     
         
@@ -100,9 +101,9 @@ def main2():
     ship = ContainerShip(
         ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
     #loaded_container_set = load_set_of_containers("./solution/set_of_containers/set_of_6k_containers.tsv")
-    random.seed(42069)
+    random.seed()
     container_set = ContainerSet()
-    set_size = 10000
+    set_size = 6600
     container_set.generate_random_containers(set_size)
     print("Number of containers: " + str(len(container_set.containers)))
     for container in container_set.containers:
@@ -119,7 +120,7 @@ def main2():
     
     ship.find_container("0001")
     ship.find_container("0865")
-    ship.find_container("6344")
+    print(ship.find_container("6345"))
     
 
     
@@ -130,8 +131,12 @@ def main2():
     # print(ship.full_sections[0], "\t", ship.full_sections[2], "\t", ship.full_sections[4])
     # print(ship.full_sections[1], "\t", ship.full_sections[3], "\t", ship.full_sections[5])
     
+        
+    print("Number of operations in the ship is: ",ship.get_number_of_operations())
+        
     
-    save_ship_with_containers_to_file(ship, "./saved_ships/set_of_{set_size}_containers.tsv".format(set_size=set_size))
+    save_ship_with_containers_to_file(ship, "./solution/saved_ships/set_of_{set_size}_containers.tsv".format(set_size=set_size))
+    
 
             
         
