@@ -46,6 +46,7 @@ class ContainerSet:
     def generate_n_20_foot_containers(self, set_size, cargo):
         for i in range(set_size):
             container = Container(create_container_code(), 20, 2, 0, 20)
+            cargo = random.randint(0, 20)
             container.set_cargo(cargo)
             self.add_container_to_set(container)
     
@@ -53,6 +54,7 @@ class ContainerSet:
     def generate_n_40_foot_containers(self, set_size, cargo):
         for i in range(set_size):
             container = Container(create_container_code(), 40, 4, 0, 22)
+            cargo = random.randint(0, 22)
             container.set_cargo(cargo)
             self.add_container_to_set(container)
             

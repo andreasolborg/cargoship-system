@@ -4,17 +4,19 @@ from Container import Container
 # Save the ship to a file with the containers on it as well as the ship dimensions and the container information (code, length, weight, cargo, cargo capacity)
 def save_ship_with_containers_to_file(ship, file_path):
     with open(file_path, "w") as file:
-        file.write("10 This file contains information about the containers on an already loaded ship.\nThe sorting is already done when loading the containers.\n")
-        file.write("Ship dimensions: {}x{}x{}\n".format(ship.get_ship_length(), ship.get_ship_width(), ship.get_ship_height()))
+        file.write("This file contains information about the containers on an already loaded ship.\nThe sorting is already done when loading the containers.\n")
+        file.write("Ship dimensions (length, width, height): \n")
+        file.write("{}\t{}\t{}\n".format(ship.get_ship_length(), ship.get_ship_width(), ship.get_ship_height()))
         # Write the ship dimensions to the file
-        # file.write("{}\t{}\t{}\n".format(ship.get_ship_length(), ship.get_ship_width(), ship.get_ship_height()))
-        file.write("Dimensions for each section: {}x{}\n".format(ship.get_sections()[0].get_section_width(), ship.get_sections()[0].get_section_length()))
+        file.write("Dimensions for each section (length, width, max_height): \n")
+        file.write("{}\t{}\t{}\n".format(ship.get_section(0).get_section_length(), ship.get_section(0).get_section_width(), ship.get_section(0).get_max_stack_height()))
+        file.write("--------------------\n")
         # Write the container information to the file
         # Iterate through the containers on the ship
         for section in ship.get_sections():
             file.write("Section {}\n".format(section.get_sectionID()))
 
-            holding_container = section.get_holding_container()
+            holding_container = section.get_holding_containers()
             if len(holding_container) > 0:
                 file.write("This section has a holding container with the following information:\n")
                 file.write("code\tlength\tweight\tcargo\tTW\tcargo capacity\n")
@@ -47,6 +49,16 @@ def save_ship_with_containers_to_file(ship, file_path):
 
 # We dont need to check for the length of the container, because the ship_load.tsv file is already correct
 def load_ship_with_containers_from_file(file_path):
+    with open(file_path, "r") as file:
+        # Skip the 2 first lines
+        file.readline()
+        file.readline()
+        # Read the ship dimensions
+        values = file.readline().split("\t")
+
+
+            # We dont need to check for the length of the container, because the ship_load.tsv file is already correct
+def load_ship_with_containers_from_file1(file_path):
     with open(file_path, "r") as file:
         # Skip the 2 first lines
         values = file.readline().split("\t")

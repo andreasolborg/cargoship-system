@@ -21,6 +21,8 @@ class ContainerShip:
             
         self.holding_spot = []  # Holding spot for 20ft containers
 
+        self.list_of_containers = []  # List of containers that are not in the ship
+
     def get_ship_length(self):
         return self.length
 
@@ -49,6 +51,16 @@ class ContainerShip:
                 lightest_section = section
         return lightest_section
 
+
+    def get_heaviest_section(self):
+        heaviest_section = self.get_sections()[0]
+        for section in self.get_sections():
+            if section.get_section_weight() > heaviest_section.get_section_weight():
+                heaviest_section = section
+        return heaviest_section
+
+
+
     def add_container(self, container):
         if len(self.available_sections) == 0:                   # if there is no available section
             raise Exception("Ship is full, no available section(s). Could not add container with ID: " + container.get_code(), "Stop adding containers.")                            
@@ -62,6 +74,33 @@ class ContainerShip:
                 self.add_container(container)                   # Try to add container again to the lightest section
             else:
                 lightest_section.add_container_to_section(container)
+
+
+#### UNLOADING CONTAINERS ####
+    
+    def get_number_of_containers_on_ship(self):
+        containers_on_ship = 0
+        for section in self.get_sections():
+            for stack in section.get_container_stacks():
+                containers_on_ship += stack.get_number_of_containers()
+        return containers_on_ship
+
+    def unload_all_containers(self):
+        containers_on_ship = self.get_number_of_containers_on_ship()
+        list_of_containers = []
+        for i in range(0, containers_on_ship):
+            container = self.remove_containers()
+            list_of_containers.append(container)
+        return list_of_containers
+
+
+            
+#### UNLOADING CONTAINERS FINISHED ####
+
+
+            
+
+        
 
     #Reimplement to improve performance
     def find_container(self, container_code):
@@ -95,9 +134,10 @@ def main():
     ship = ContainerShip(
         ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
     #loaded_container_set = load_set_of_containers("./solution/set_of_containers/set_of_6k_containers.tsv")
-    random.seed()
     container_set = ContainerSet()
-    set_size = 6600
+    set_size = 6900
+    random.seed(1)
+    # container_set.generate_random_containers(set_size)
     container_set.generate_random_containers(set_size)
     print("Number of containers to load: " + str(len(container_set.containers)))
 
@@ -114,9 +154,6 @@ def main():
     print(ship.find_container("6345"))
 
     print(ship)
-    
-
-    
     # Pretty print the ships sections
     # for i in range(0, 6):
     #     print("Section " + str(i+1) + " weight: " + str(ship.full_sections[i].get_section_weight()), "containers: " + str(ship.full_sections[i].get_number_of_containers()) + "\n" + str(ship.full_sections[i]), "size of available stack: " + str(len(ship.full_sections[i].get_available_container_stacks())))
@@ -129,7 +166,7 @@ def main():
         
     
     save_ship_with_containers_to_file(ship, "./solution/saved_ships/set_of_{set_size}_containers.tsv".format(set_size=set_size))
-    
+
 
             
         

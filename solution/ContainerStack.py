@@ -5,7 +5,6 @@ class ContainerStack:
         self.sectionID = sectionID
         self.max_stack_height = max_stack_height
         self.location_in_section = location_in_section
-        self.x_location, self.y_location = location_in_section
         self.number_of_containers = 0
         self.stack_weight = 0
         self.top_weight = 0
@@ -52,22 +51,22 @@ class ContainerStack:
             return False
 
     # Set functions
-    def set_sectionID(self, sectionID):
-        self.sectionID = sectionID
+    # def set_sectionID(self, sectionID):
+    #     self.sectionID = sectionID
 
-    def set_max_stack_height(self, max_stack_height):
-        self.max_stack_height = max_stack_height
+    # def set_max_stack_height(self, max_stack_height):
+    #     self.max_stack_height = max_stack_height
 
-    def set_location_in_section(self, location_in_section):
-        if len(location_in_section) != 2:
-            raise Exception("Location in section must be a tuple of length 2") #Trying out Exceptions
-        self.location_in_section = location_in_section
+    # def set_location_in_section(self, location_in_section):
+    #     if len(location_in_section) != 2:
+    #         raise Exception("Location in section must be a tuple of length 2") #Trying out Exceptions
+    #     self.location_in_section = location_in_section
 
-    def set_containers(self, containers):
-        self.containers = containers
+    # def set_containers(self, containers):
+    #     self.containers = containers
 
-    def set_stack_weight(self, stack_weight):
-        self.stack_weight = stack_weight
+    # def set_stack_weight(self, stack_weight):
+    #     self.stack_weight = stack_weight
         
 
     # tostring
@@ -85,25 +84,25 @@ class ContainerStack:
             elif len(self.containers[-1]) == 2:
                 containers = self.containers[-1]
                 self.top_weight = containers[0].get_total_weight() + containers[1].get_total_weight()
-          
-                      
+            else:
+                raise Exception("Container must be a single container or a list of two containers")
+                              
     def push_container_to_stack(self, container):
-        if len(self.containers) == self.max_stack_height:
-            raise Exception("Container stack is full")
-        if type(container) is not list:
-            container = [container]
-
-        if len(container) == 1:
-            self.containers.append(container)
-            self.stack_weight += container[0].get_total_weight()
-        elif len(container) == 2:
-            self.containers.append(container)
-            self.stack_weight += container[0].get_total_weight() + container[1].get_total_weight()
+        if not self.container_stack_is_full():
+            if type(container) is not list:
+                container = [container]
+            if len(container) == 1:
+                self.containers.append(container)
+                self.stack_weight += container[0].get_total_weight()
+            elif len(container) == 2:
+                self.containers.append(container)
+                self.stack_weight += (container[0].get_total_weight() + container[1].get_total_weight())
+            else:
+                raise Exception("Container must be a single container or a list of two containers")
+            self.operationCounter += len(container)
+            self.update_top_weight()
         else:
-            raise Exception("Container must be a single container or a list of two containers")
-
-        self.operationCounter += len(container)
-        self.update_top_weight()
+            raise Exception("Container stack is full")
         
 
     # Add container to stack using push and pop functions such that the stack is always sorted by weight. 
@@ -130,67 +129,12 @@ class ContainerStack:
         for temp_stack_pop in reversed(temporary_storing_stack):
             self.push_container_to_stack(temp_stack_pop)
 
-
-    def push_container_to_stack1(self, container): # Dont check for length of container, just check if it is a list or not and then add it to the stack
-        if len(self.containers) == self.max_stack_height:
-            raise Exception("Container stack is full")
-        else:
-            if len(container) == 1: # If container is a single container
-                self.containers.append(container)
-                self.stack_weight += container[0].get_total_weight()
-                self.operationCounter += 1
-                #print(self.operationCounter, "Operation counter")
-            else:
-                if len(container) == 2: # If container is a list of two containers
-                    self.containers.append(container)
-                    container_weight = container[0].get_total_weight() + container[1].get_total_weight()
-                    self.stack_weight += container_weight
-                    self.operationCounter += 2
-                    #print(self.operationCounter, "Operation counter")
-                else:
-                    raise Exception("Container must be a single container or a list of two containers")
-            self.update_top_weight()
-
-        
-    # Mi originale :3
-    def add_container_to_stack1(self, container):
-        if type(container) is Container:                            # If container is a single container and not a list of containers
-            if container.get_length() == 20:                        # If container is a 20-feet container 
-                raise Exception(                                    # Raise an exception
-                    'A single 20 foot container cannot be loaded to a containerStack') 
-            else:
-                container_weight = container.get_total_weight()
-                container = [container]                             # Make container a list of one container to make it easier to handle later
-        else:
-            if len(container) == 1: 
-                container_weight = container[0].get_total_weight()
-                
-            else:
-                if container[0].get_length() == 40:
-                    raise Exception(
-                        "You cannot load two 40-feet containers at the same time")
-                else:
-                    container_weight = container[0].get_total_weight() + container[1].get_total_weight()
-        ### Stack-Sorting algorithm ###
-        temporary_storing_stack = [] 
-        while container_weight > self.top_weight and self.top_weight != 0:
-            temporary_storing_stack.append(self.pop_container_from_stack())
-        temporary_storing_stack.append(container)
-        while len(temporary_storing_stack) > 0:
-            temp_stack_pop = temporary_storing_stack.pop()
-            self.push_container_to_stack(temp_stack_pop)
-
-
-                
+    
     def pop_container_from_stack(self):
         if len(self.containers) == 0:
             raise Exception("Stack is empty")
         else:
             container = self.containers.pop()
-            #if type(container) == Container:                            #This may be removed
-            #    self.stack_weight -= container.get_total_weight()        #This may be removed
-            #    self.operationCounter += 1                                  #This may be removed
-            #else:
             for c in container:
                 self.stack_weight -= c.get_total_weight()
                 self.operationCounter += 1
