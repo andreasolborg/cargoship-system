@@ -1,6 +1,4 @@
 import time
-
-import numpy as np
 from Container import *
 from ContainerSet import *
 from ContainerSetManager import *
@@ -36,7 +34,7 @@ class ContainerShip:
         return self.available_sections + self.full_sections
 
     def get_section(self, sectionID):
-        return self.sections[sectionID]
+        return self.get_sections()[sectionID]
     
     def get_number_of_operations(self):
         for section in self.get_sections():
@@ -77,23 +75,19 @@ class ContainerShip:
                                 return container
         return "Container with id {} not found in the ship.".format(container_code)
 
-    
+    def __str__(self):
+        ship_string = ""
+        sections_sorted = sorted(self.get_sections(), key=lambda section: section.get_sectionID())
+        for section in sections_sorted:
+            ship_string += str(section) + "\t"
+
         
+        return ship_string
+
+
+
 
 def main():
-    random.seed(10)
-    container_set = ContainerSet()
-    container_set.generate_random_containers(10)
-    #ship = ContainerShip(12, 10, 9)
-    ship = ContainerShip(24, 22, 18)
-    
-    
-    for section in ship.get_sections():
-        print(section)
-        
-
-
-def main2():
     #START TIME
     start_time = time.time()
     
@@ -105,10 +99,7 @@ def main2():
     container_set = ContainerSet()
     set_size = 6600
     container_set.generate_random_containers(set_size)
-    print("Number of containers: " + str(len(container_set.containers)))
-    for container in container_set.containers:
-        if container.get_code() == "6346":
-            print(container.get_code(), container.get_total_weight(), container.get_length())
+    print("Number of containers to load: " + str(len(container_set.containers)))
 
     # Load up sections
     try :
@@ -121,6 +112,8 @@ def main2():
     ship.find_container("0001")
     ship.find_container("0865")
     print(ship.find_container("6345"))
+
+    print(ship)
     
 
     
@@ -148,4 +141,4 @@ def main2():
 
 
 if __name__ == "__main__":
-    main2()
+    main()

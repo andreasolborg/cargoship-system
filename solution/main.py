@@ -1,7 +1,14 @@
-from container import Container
-from ContainerSet import ContainerSet
-from ContainerSetManager import save_set_of_containers, load_set_of_containers
+# Author: Andreas Olborg
 
+
+# Import the classes from the other files
+
+from Container import *
+from ContainerSet import *
+from ContainerSetManager import *
+from ContainerShipManager import *
+from ContainerStack import *
+from ContainerSection import *
 
 def main():
     # Generate a set of 10 random containers
