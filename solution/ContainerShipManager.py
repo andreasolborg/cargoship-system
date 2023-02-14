@@ -1,4 +1,7 @@
 from Container import Container
+from ContainerStack import ContainerStack
+from ContainerSection import ShipSection
+from ContainerShipRevised import ContainerShip
 
 # TASK 6
 # Save the ship to a file with the containers on it as well as the ship dimensions and the container information (code, length, weight, cargo, cargo capacity)
@@ -14,7 +17,7 @@ def save_ship_with_containers_to_file(ship, file_path):
         # Write the container information to the file
         # Iterate through the containers on the ship
         for section in ship.get_sections():
-            file.write("Section {}\n".format(section.get_sectionID()))
+            file.write("{}\n".format(section.get_sectionID()))
 
             holding_container = section.get_holding_containers()
             if len(holding_container) > 0:
@@ -46,30 +49,4 @@ def save_ship_with_containers_to_file(ship, file_path):
         file.close()
                        
     file.close()
-
-# We dont need to check for the length of the container, because the ship_load.tsv file is already correct
-def load_ship_with_containers_from_file(file_path):
-    with open(file_path, "r") as file:
-        # Skip the 2 first lines
-        file.readline()
-        file.readline()
-        # Read the ship dimensions
-        values = file.readline().split("\t")
-
-
-            # We dont need to check for the length of the container, because the ship_load.tsv file is already correct
-def load_ship_with_containers_from_file1(file_path):
-    with open(file_path, "r") as file:
-        # Skip the 2 first lines
-        values = file.readline().split("\t")
-        ship = ContainerShip(int(values[0]), int(values[1]), int(values[2]))
-        file.readline()
-        values = []
-        # Iterate through the rest of the file
-        for line in file:
-            values = line.split("\t")
-            container = Container(values[3], int(values[4]), int(values[5]), int(values[6]), int(values[7]))
-            ship.insert_container(container, int(values[2]), int(values[1]), int(values[0]))
-    return ship
-            
 

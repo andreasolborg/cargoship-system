@@ -126,7 +126,7 @@ class ContainerShip:
 
 
 
-def main():
+def main1():
     #START TIME
     start_time = time.time()
     
@@ -175,6 +175,9 @@ def main():
     end_time = time.time()
     print("Time: " + str(end_time - start_time))
     
+
+def main():
+    load_ship_with_containers_from_file("./solution/saved_ships/set_of_6500_containers.tsv")
 
 
 if __name__ == "__main__":
