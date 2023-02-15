@@ -31,7 +31,7 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
 - We would also need to keep track of the number of operations performed on the stack.
 
 - Functions to implement:
-    - self.containers = [] # the holding list for 20-feet containers that are waiting to be placed in the stack
+    - self.containers = [x] # the holding list for 20-feet containers that are waiting to be placed in the stack
 
 
     - Remove container from stack using pop -> 
@@ -73,8 +73,8 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
 
 
 ## SHIP:
-    [] Implement number of operations logics
-    [] Implement "find-lightest-section" function
+    [x] Implement number of operations logics
+    [x] Implement "find-lightest-section" function
     [] Implement "is_ship_balanced" function
         [] implement error handling for this
     [x] Implement "is_ship_full" function
@@ -83,10 +83,10 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
         [x] Add to lightest section
         [x] Add to lightest stack
         [x] Add to lightest stack in lightest section
-    [] Implement "remove_container" function
-        [] Remove from heaviest section
-        [] Remove from heaviest stack
-        [] Remove from heaviest stack in heaviest section
+    [x] Implement "remove_container" function
+        [x] Remove from heaviest section
+        [x] Remove from heaviest stack
+        [x] Remove from heaviest stack in heaviest section
 
 
 ## CONTAINER:
@@ -97,14 +97,14 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
 
 
 ## CONTAINER STACK: <------------ FINISHED -----------> 
-    [] Move the temporary holding list for 20-feet containers to the ship-section class
+    [x] 
     [] If time:
         [] A single container in a pair can be changed such that it is more balanced
     
     
 ## SHIP SECTION:
-    [] Implement find lightest stack
-    [] MUST BE TESTED WITH A SET OF CONTAINERS
+    [x] Implement find lightest stack
+    [x] MUST BE TESTED WITH A SET OF CONTAINERS
 
 
 
@@ -120,10 +120,10 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
 
 ## Asssumptions
 - A 40-feet container must be placed either directly ontop of 2 consecutive 20-feet container or directly ontop of a 40-feet container.
-- 20-feet containers comes in fixed pairs. After they are "glued" together, they cannot be separated, and is treated like a single 40-feet container.
+- 20-feet containers comes in fixed pairs. After they are "glued" together, they cannot be separated, and is treated like a single 40-feet container when sorting based on weight. It still takes up 2 consecutive grid spots, and takes 2 operations to place.
 - When unloading a whole ship, it is at the harbor and therefore we do not need to worry about the ship being balanced. This will also vastly reduce the number of operations needed to unload the ship.
-- Task 10: It should need be nessecary to have this when placing at the lightest_stack in the lightest_section. The ship itself doesnt have any weight so we do not check for stability until 100 containers are loaded
-
+- Task 10: It should need be nessecary to have this when placing at the lightest_stack in the lightest_section. The ship itself doesnt have any weight so we do not check for stability until 100 containers are loaded. Or we can just check after every container has been loaded (the easy way out)
+- When loading ship from file, 
 
 - Task 12: We have 3 cranes, because of the 3x2 grid we have implemented. If we were to have a 4x2 grid for 4 cranes we would need to tweak our section_length. This would however make it harder to calculate front, middle and end section.
     - A solution would be to split it into a 12x2 grid, where the first 4x2 sections are the front, etc. This would make it easier to calculate the front, middle and end section, but would make it harder to calculate the lightest section. 
@@ -136,3 +136,9 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
 Finished:
 [x] Stack number of operations ==> Crane task(s) done
 [x] Save ship to file
+
+
+
+Hva om:
+- Vi kan ha en pretty print til fil aka den jeg allerede har.
+- Når vi lagrer skipet, kan  vi bare unloade hele skipet og lagre disse kronologisk i en liste. Når vi da loader skipet kan vi snu listen og legge på.

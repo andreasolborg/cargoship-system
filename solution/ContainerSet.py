@@ -30,33 +30,34 @@ class ContainerSet:
 
     # Generate a list of random containers using add_container and remove_container functions
     # Task 2.1.3
-    def generate_random_containers(self, set_size):
+    def generate_random_containers(self, set_size, size=None):
         for i in range(set_size):
-            container = generate_random_container()
+            container = generate_random_container(size)
             self.add_container_to_set(container)
         
     # Generate empty containers for later use
-    def generate_n_empty_containers(self, set_size):
+    def generate_n_empty_containers(self, set_size, size):
         for i in range(set_size):
-            container = generate_random_container()
+            container = generate_random_container(size)
             container.set_cargo(0)
             self.add_container_to_set(container)
+        
     
     # Generate list of 20 foot containers
-    def generate_n_20_foot_containers(self, set_size, cargo):
-        for i in range(set_size):
-            container = Container(create_container_code(), 20, 2, 0, 20)
-            cargo = random.randint(0, 20)
-            container.set_cargo(cargo)
-            self.add_container_to_set(container)
+    # def generate_n_20_foot_containers(self, set_size, cargo):
+    #     for i in range(set_size):
+    #         container = Container(create_container_code(), 20, 2, 0, 20)
+    #         cargo = random.randint(0, 20)
+    #         container.set_cargo(cargo)
+    #         self.add_container_to_set(container)
     
-    # Generate list of 40 foot containers
-    def generate_n_40_foot_containers(self, set_size, cargo):
-        for i in range(set_size):
-            container = Container(create_container_code(), 40, 4, 0, 22)
-            cargo = random.randint(0, 22)
-            container.set_cargo(cargo)
-            self.add_container_to_set(container)
+    # # Generate list of 40 foot containers
+    # def generate_n_40_foot_containers(self, set_size, cargo):
+    #     for i in range(set_size):
+    #         container = Container(create_container_code(), 40, 4, 0, 22)
+    #         cargo = random.randint(0, 22)
+    #         container.set_cargo(cargo)
+    #         self.add_container_to_set(container)
             
     
 

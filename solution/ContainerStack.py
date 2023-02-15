@@ -49,6 +49,12 @@ class ContainerStack:
             return True
         else:
             return False
+    
+    def container_stack_is_empty(self):
+        if len(self.containers) == 0:
+            return True
+        else:
+            return False
 
     # Set functions
     # def set_sectionID(self, sectionID):
@@ -140,6 +146,27 @@ class ContainerStack:
                 self.operationCounter += 1
             self.update_top_weight()
             return container
+
+    def remove_container_from_stack(self, container):
+        if len(self.containers) == 0:
+            raise Exception("Stack is empty")
+        else:
+            for index, stack in enumerate(self.containers):
+                if container in stack:
+                    self.containers.pop(index)
+                    for c in stack:
+                        self.stack_weight -= c.get_total_weight()
+                        self.operationCounter += 1
+                    self.update_top_weight()
+                    return stack
+            raise Exception("Container not found in stack")
+
+    # Used to get the height level of a container in the stack (used in find_container function)
+    def get_index_of_container(self, container):
+        for index, stack in enumerate(self.containers):
+            if container in stack:
+                return index
+        return -1
         
     # print the stack as a nested list, where each element is a list of containers shown as a string (e.g. [first container code, second container code])
     def print_stack_as_nested_list(self):
@@ -184,7 +211,6 @@ def main():
         stack.add_container_to_stack(container)
     
     # Print the stack, and the operation counter. Should be 197
-    print(stack)
 
 
     # Create a new stack for testing purposes
@@ -201,9 +227,16 @@ def main():
     for container in stack2.containers:
         for c in container:
             print(c)
-    
-    print(stack2.get_containers())
 
+    # Remove a container from the stack
+    stack2.remove_container_from_stack(c12)
+
+    print("------------------ After removing container 12 ------------------")
+    for container in stack2.containers:
+        for c in container:
+            print(c)
+
+    
 
     
 

@@ -29,8 +29,7 @@ class Container:
 
     def get_total_weight(self):
         return self.weight + self.cargo
-      
-    # Set functions
+        
     
     def set_cargo(self, cargo):
         if cargo > self.weight_capacity:
@@ -58,15 +57,21 @@ def create_container_code():
 # Generate a random container with a random code, length, width, height and weight
 # The loaded weight should be 0. The weight should be 2 tons for a 20 foot container and 4 tons for a 40 foot container.
 
-def generate_random_container():
+def generate_random_container(size=None):
     possible_containers = [[20, 2, 20], [40, 4, 22]]
     random_container_ = random.choice(possible_containers)
+    if size == 20:
+        random_container_ = possible_containers[0]
+    elif size == 40:
+        random_container_ = possible_containers[1]
+    else: # size == None or size != 20 or size != 40
+        random_container_ = random.choice(possible_containers)
+        
 
     random_code = create_container_code()
     length = random_container_[0]
     weight = random_container_[1]
     weight_capacity = random_container_[2]
-
     random_container = Container(random_code, length, weight, random.randint(0, weight_capacity), weight_capacity) ## random.randint(0, weight_capacity) is the cargo weight (loaded weight) make it a function
     return random_container
 

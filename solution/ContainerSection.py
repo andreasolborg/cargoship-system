@@ -104,16 +104,25 @@ class ShipSection:
         else:
             return False
 
+    def is_section_empty(self):
+        if len(self.get_container_stacks()) == 0:
+            return True
+        else:
+            return False
+
+    def add_holding_container(self, container):
+        self.holding_containers.append(container)
+
+
     def add_container_to_section(self, container):
         if self.is_section_full() == True:
-            raise Exception("Section is full, cannot add container")
+            raise Exception("Container stack is full, cannot add container, with ID: " + container.get_code())
         else:    
             container_stack = self.get_lightest_container_stack()
             if container_stack.container_stack_is_full() == True:
                 self.full_container_stacks.append(container_stack)
                 self.available_container_stacks.remove(container_stack)
-                if self.is_section_full() == False:
-                    self.add_container_to_section(container) 
+                self.add_container_to_section(container)
             else:
                 if container.get_length() == 20 and self.holding_containers == []:
                     self.holding_containers.append(container)
@@ -124,6 +133,18 @@ class ShipSection:
                 elif container.get_length() == 40:
                     container_stack.add_container_to_stack(container)
                 self.section_weight += container.get_weight()
+
+
+    def pop_container_from_heaviest_stack(self):
+        heaviest_stack = self.get_heaviest_container_stack()
+        if heaviest_stack.container_stack_is_empty() == True:
+            raise Exception("Heaviest stack is empty, cannot pop container")
+        else:               
+            container = heaviest_stack.pop_container_from_stack()
+            for c in container:
+                self.section_weight -= c.get_total_weight()
+            return container
+
                 
         
     def get_number_of_operations_in_section(self):
@@ -150,7 +171,7 @@ class ShipSection:
             for x in range(0, self.section_length):
                 for stacks in self.get_container_stacks():
                     if stacks.location_in_section == (x, y):
-                        return_string += str(stacks.get_number_of_operations()) + ":" + str(stacks.get_stack_height()) + "-" + str(stacks.get_stack_weight()) + " "
+                        return_string += str(stacks.get_number_of_operations()) + "--" + str(stacks.get_stack_height()) + "--" + str(stacks.get_stack_weight()) + "\t"
                         total += stacks.get_stack_weight()
             return_string += "\n"
             
@@ -176,7 +197,7 @@ def main():
         except Exception as e:
             print(e)
             break
-
+    print(section)
     stack_to_inspect = section.get_stack((0, 0))
     print(stack_to_inspect.get_location_in_section(),"List:", stack_to_inspect.get_containers(),
           "Weight", stack_to_inspect.get_stack_weight(),
@@ -213,6 +234,10 @@ def main():
     print(section.get_number_of_operations_in_section(), "is the number of operations in the section")
 
 
+    popped_container = section.pop_container_from_heaviest_stack()
+    print(popped_container, "is the popped container")
+    popped_container = section.pop_container_from_heaviest_stack()
+    print(popped_container, "is the popped container")
 
 if __name__ == "__main__":
     main()
