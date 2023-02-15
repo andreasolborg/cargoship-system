@@ -270,7 +270,7 @@ def main():
     # print(ship)
 
     #END TIME
-    save_ship_with_containers_to_file_pretty(ship, "./solution/saved_ships/set_of_{set_size}_containers.tsv".format(set_size=set_size))
+    save_ship_with_containers_to_file(ship, "./solution/saved_ships/set_of_{set_size}_containers.tsv".format(set_size=set_size))
     
     # print("Number of operations in the ship is: ",ship.get_number_of_operations())
     # Unload ship
