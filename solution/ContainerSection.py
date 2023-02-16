@@ -70,6 +70,8 @@ class ShipSection:
         
         
     def get_lightest_container_stack(self):
+        if len(self.available_container_stacks) == 0:
+            return "No stacks in section"
         lightest_stack = self.available_container_stacks[0]
         for stack in self.available_container_stacks:
             if stack.get_stack_weight() < lightest_stack.get_stack_weight():
@@ -96,7 +98,16 @@ class ShipSection:
                 return stack
         return None
 
-    
+    def get_weight_per_height_level_in_section(self):
+        weight_per_height_level = []
+        for height_level in range(0, self.max_stack_height):
+            weight_per_height_level.append(0)
+        for stack in self.get_container_stacks():
+            for height_level in range(0, self.max_stack_height):
+                weight_per_height_level[height_level] += stack.get_weight_at_height_level(height_level)
+        return weight_per_height_level
+
+
     # Functionalities
     def is_section_full(self):
         if len(self.available_container_stacks) == 0:
@@ -116,6 +127,7 @@ class ShipSection:
 
     def add_container_to_section(self, container):
         if self.is_section_full() == True:
+            return
             raise Exception("Container stack is full, cannot add container, with ID: " + container.get_code())
         else:    
             container_stack = self.get_lightest_container_stack()
@@ -188,7 +200,7 @@ def main():
     # Create a container
     container_set = ContainerSet()
     random.seed(420)
-    container_set.generate_random_containers(6500//6)
+    container_set.generate_random_containers(1500)
 
     # Print all the stacks in the section in as a 2d grid 
     for container in container_set.containers:
@@ -230,7 +242,7 @@ def main():
     # print(section, "is the section")
     # print(section.get_number_of_operations_in_section(), "is the number of operations in the section")
     # print(section.get_section_weight(), "is the section weight")
-    # print(section.get_lightest_container_stack(), "is the lightest stack")
+    print(section.get_lightest_container_stack(), "is the lightest stack")
     print(section.get_number_of_operations_in_section(), "is the number of operations in the section")
 
 
@@ -238,6 +250,9 @@ def main():
     print(popped_container, "is the popped container")
     popped_container = section.pop_container_from_heaviest_stack()
     print(popped_container, "is the popped container")
+
+    weightlist = section.get_weight_per_height_level_in_section()
+    print(weightlist, "is the weightlist")
 
 if __name__ == "__main__":
     main()

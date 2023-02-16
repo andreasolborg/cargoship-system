@@ -14,6 +14,7 @@ class ContainerShip:
         self.available_sections = []
         self.full_sections = []
         self.number_of_operations = 0
+
         for i in range(0, 6):
             # 3x2 sections
             self.available_sections.append(ShipSection(
@@ -21,7 +22,7 @@ class ContainerShip:
             
         self.holding_spot = []  # Holding spot for 20ft containers
 
-        self.list_of_containers = []  # List of containers that are not in the ship
+        self.list_of_unloaded_containers = []  # List of containers that are not in the ship
 
     def get_ship_length(self):
         return self.length
@@ -43,15 +44,13 @@ class ContainerShip:
         for section in self.get_sections():
             self.number_of_operations += section.get_number_of_operations_in_section()
         return self.number_of_operations
-
-        
+   
     def get_lightest_section(self):
         lightest_section = self.available_sections[0]
         for section in self.available_sections:
             if section.get_section_weight() < lightest_section.get_section_weight():
                 lightest_section = section
         return lightest_section
-
 
     def get_heaviest_section(self):
         heaviest_section = self.get_sections()[0]
@@ -62,15 +61,15 @@ class ContainerShip:
             return "No containers on ship."
         return heaviest_section
 
-
-
     # ----------------- UNTESTED METHODS ----------------- #
+    # -------------------- END OF UNTESTED METHODS --------------------
 
     def calculate_total_weight(self):
         total_weight = 0
         for section in self.get_sections():
             total_weight += section.get_section_weight()
         return total_weight
+
     
     def calculate_starboard_weight(self):
         starboard_weight = 0
@@ -96,19 +95,19 @@ class ContainerShip:
     def calculate_middle_weight(self):
         middle_weight = 0
         for section in self.get_sections():
-            if section.get_sectionID() > 2 and section.get_sectionID() < 5:
+            if section.get_sectionID() > 1 and section.get_sectionID() < 4:
                 middle_weight += section.get_section_weight()
         return middle_weight
     
     def calculate_back_weight(self):
         back_weight = 0
         for section in self.get_sections():
-            if section.get_sectionID() > 4:
+            if section.get_sectionID() > 3:
                 back_weight += section.get_section_weight()
         return back_weight
 
     # Ship is balanced if The weight on starboard does not exceed the weight on port side by more that x%, e.g. x = 5
-    def is_ship_balanced_portside_and_starboard(self, x, y):
+    def is_ship_balanced_portside_and_starboard(self, x):
         starboard_weight = self.calculate_starboard_weight()
         port_weight = self.calculate_port_weight()
         if starboard_weight > port_weight:
@@ -118,35 +117,52 @@ class ContainerShip:
             if (port_weight - starboard_weight) / port_weight * 100 > x:
                 return False
         return True
-    
-    # Ship is balanced if The weight of a section does not exceed the weight of another section by more that x%, e.g. x = 10
-    def is_ship_balanced_section(self, x, y):
-        for section in self.get_sections():
-            for section2 in self.get_sections():
-                if section.get_section_weight() > section2.get_section_weight():
-                    if (section.get_section_weight() - section2.get_section_weight()) / section.get_section_weight() * 100 > x:
-                        return False
-                else:
-                    if (section2.get_section_weight() - section.get_section_weight()) / section2.get_section_weight() * 100 > x:
-                        return False
+
+    # Ship is balanced if the weight of each section does not exceed the weight of the middle section by more than y%, e.g. y = 5
+    def is_ship_balanced_section(self, y):
+        front_weight = self.calculate_front_weight()
+        middle_weight = self.calculate_middle_weight()
+        back_weight = self.calculate_back_weight()
+
+        # Calculate the percentage difference between the weights of each section
+        front_middle_diff = abs((middle_weight - front_weight) / middle_weight) * 100
+        middle_back_diff = abs((middle_weight - back_weight) / middle_weight) * 100
+        front_back_diff = abs((front_weight - back_weight) / front_weight) * 100
+
+        # Check if any section exceeds the weight difference limit
+        if front_middle_diff > y or middle_back_diff > y or front_back_diff > y:
+            return False
         return True
 
+    def are_containers_placed_in_descending_order(self):
+        if self.get_weight_per_height_level() == sorted(self.get_weight_per_height_level(), reverse=True):
+            return True
+
     def is_ship_balanced(self, x, y):
-        if self.is_ship_balanced_portside_and_starboard(x, y) == True and self.is_ship_balanced_section(x, y) == True:
+        if self.is_ship_balanced_portside_and_starboard(x) == True and self.is_ship_balanced_section(y) == True and self.are_containers_placed_in_descending_order() == True:
             return True
         return False
-
     
-    # -------------------- END OF UNTESTED METHODS --------------------
+    def is_ship_full(self):
+        for section in self.get_sections():
+            if section.is_section_full() == False:
+                return False
+        return True
 
-
+    def get_weight_per_height_level(self):
+        weight_per_height_level = []
+        for i in range(self.height):
+            weight_per_height_level.append(0)
+        for section in self.get_sections():
+            for i in range(self.height):
+                weight_per_height_level[i] += section.get_weight_per_height_level_in_section()[i]
+        return weight_per_height_level
     
     def get_number_of_containers_on_ship(self):
-        containers_on_ship = 0
+        number_of_containers = 0
         for section in self.get_sections():
-            for stack in section.get_container_stacks():
-                containers_on_ship += stack.get_number_of_containers()
-        return containers_on_ship
+            number_of_containers += section.get_number_of_containers()
+        return number_of_containers
 
     def get_stacks_that_are_not_full(self):
         stacks_that_are_not_full = []
@@ -156,10 +172,9 @@ class ContainerShip:
                     stacks_that_are_not_full.append(stack)
         return stacks_that_are_not_full
         
-
     def add_container(self, container):
         if len(self.available_sections) == 0:                   # if there is no available section
-            raise Exception("Ship is full, no available section(s). Could not add container with ID: " + container.get_code(), "Stop adding containers.")                            
+            raise Exception("No available sections to add container with ID: " + container.get_code() + " ship is full")
         else:
             lightest_section = self.get_lightest_section()      # get the lightest section
             #print("Adding container: " + container.get_code(), "total weight: " + str(container.get_total_weight()), "to section " + str(lightest_section.get_sectionID()))
@@ -171,9 +186,57 @@ class ContainerShip:
             else:
                 lightest_section.add_container_to_section(container)
 
+    def load_ship(self, container_set):
+        print("Loading ship....")
+        for container in container_set.containers:
+            try:
+                self.add_container(container)
+            except Exception as e:
+                pass
+        print("Ship loaded successfully!")
+        print("Ship is full: " + str(self.is_ship_full()))
+
+
+    def get_single_crane_loading_operation_counter(self):
+        return self.get_number_of_operations()
+
+    # We always remove the container from the top of the stack, so the number of operations is equal to the number of containers on the ship
+    def get_single_crane_unloading_operation_counter(self): 
+        return self.get_number_of_containers_on_ship()
+
+    def get_max_triple_crane_loading_operation_counter(self):
+        sections = self.get_sections()
+        front_crane_loading_operation_count = sections[0].get_number_of_operations_in_section() + sections[1].get_number_of_operations_in_section()
+        middle_crane_loading_operation_count = sections[2].get_number_of_operations_in_section() + sections[3].get_number_of_operations_in_section()            
+        back_crane_loading_operation_count = sections[4].get_number_of_operations_in_section() + sections[5].get_number_of_operations_in_section()
+        return max(front_crane_loading_operation_count, middle_crane_loading_operation_count, back_crane_loading_operation_count)
+    
+    def get_max_triple_crane_unloading_operation_counter(self):
+        sections = self.get_sections()
+        front_section_container_count = sections[0].get_number_of_containers() + sections[1].get_number_of_containers()
+        middle_section_container_count = sections[2].get_number_of_containers() + sections[3].get_number_of_containers()
+        back_section_container_count = sections[4].get_number_of_containers() + sections[5].get_number_of_containers()
+
+        # Get the amount of operations needed to unload the section with the most containers
+        max_section_container_count = max(front_section_container_count, middle_section_container_count, back_section_container_count)
+        return int(max_section_container_count)
+
+    def get_time_to_load_ship(self, operations):
+        time = int(operations) * 4 / 60 / 24
+        time = round(time, 2)
+        return "It takes:  " + str(time) + " days to load the ship"
+
+    def get_time_to_unload_ship(self, operations):
+        time = int(operations) * 4 / 60 / 24
+        time = round(time, 2)
+        return "It takes:  " + str(time) + " days to unload the ship"
+        
+
+
 
 #### UNLOADING CONTAINERS ####
 
+    # Remove specific container from ship
     def remove_container(self, container_code):
         container, section, stack,  = self.find_container(container_code)
         stack.remove_container_from_stack(container)
@@ -185,6 +248,7 @@ class ContainerShip:
             print("Section " + str(section.get_sectionID()) + " is empty, moving to available sections.")
         return container
     
+    # Remove the a container from the heaviest section
     def remove_container_from_heaviest_section(self):
         heaviest_section = self.get_heaviest_section()
         popped_container = heaviest_section.pop_container_from_heaviest_stack()
@@ -195,23 +259,22 @@ class ContainerShip:
         return popped_container
 
 
-    #Unload all containers. Always unload from the heaviest section
+    #Unload all containers, and creates the corresponding list. Always unload from the heaviest section
     def unload_all_containers(self):
         print("#### UNLOADING CONTAINERS ####")
         i = self.get_number_of_containers_on_ship()
         while i > 0:
             container = self.remove_container_from_heaviest_section()
-            self.list_of_containers.append(container)
+            self.list_of_unloaded_containers.append(container)
             for c in container:
                 i -= 1
         print("#### UNLOADING CONTAINERS FINISHED ####")
-        return self.list_of_containers
+        return self.list_of_unloaded_containers
 
             
 #### UNLOADING CONTAINERS FINISHED #### 
 
     def find_container(self, container_code):
-        holding_container = []
         for section in self.get_sections():
                 for stack in section.get_container_stacks():
                     for containers in stack.get_containers():
@@ -236,7 +299,6 @@ class ContainerShip:
 
 
 def main():
-    
     ship_dimensions = [24, 22, 18]
     ship = ContainerShip(
         ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
@@ -246,9 +308,9 @@ def main():
     random.seed(10)
     # container_set.generate_random_containers(set_size)
     container_set.generate_random_containers(set_size)
+    save_set_of_containers(container_set, "./solution/set_of_containers/set_of_6500_containers.tsv")
     print("Number of containers to load: " + str(len(container_set.containers)))
 
-    
     #START TIME
     start_time = time.time()
     # Load up sections
@@ -270,7 +332,7 @@ def main():
     # print(ship)
 
     #END TIME
-    save_ship_with_containers_to_file(ship, "./solution/saved_ships/set_of_{set_size}_containers.tsv".format(set_size=set_size))
+    save_ship_with_containers_to_file(ship, "./solution/saved_ships/ship_of_{set_size}_containers.tsv".format(set_size=set_size))
     
     # print("Number of operations in the ship is: ",ship.get_number_of_operations())
     # Unload ship
@@ -280,13 +342,13 @@ def main():
         print(e)
     
     increment = 0
-    for container in ship.list_of_containers:
+    for container in ship.list_of_unloaded_containers:
         for c in container:
             increment += 1
     print(increment)
     
     
-    print(len(ship.list_of_containers))
+    print(len(ship.list_of_unloaded_containers))
 
     
 
@@ -299,14 +361,32 @@ def main():
 
     #ship2 = load_ship_with_containers_from_file("./solution/saved_ships/set_of_2900_containers.tsv")
 
-    
-    
 
 def main2():
     start_time = time.time()
-    ship2 = load_ship_with_containers_from_file("./solution/saved_ships/set_of_6500_containers.tsv")
+    # ship2 = load_ship_with_containers_from_file(6500)
+
+    ship = ContainerShip(24, 22, 18)
+    container_set = ContainerSet()
+    random.seed(10)
+    set_size = 6500
+    container_set.generate_random_containers(set_size)
+
+    ship.load_ship(container_set)
+    
+    print(ship)
+    
+    print(ship.is_ship_balanced_portside_and_starboard(5))
+    print(ship.is_ship_balanced_section(10))
+    print(ship.get_weight_per_height_level())
+    print(ship.are_containers_placed_in_descending_order())
+
+    print(ship.is_ship_balanced(5, 10), "ship is balanced")
+
     end_time = time.time()
     print("Time: " + str(end_time - start_time))
 
+
+
 if __name__ == "__main__":
-    main()
+    main2()

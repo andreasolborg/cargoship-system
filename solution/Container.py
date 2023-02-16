@@ -38,7 +38,7 @@ class Container:
 
     # tostring
     def __str__(self) -> str:
-        return f"ContainerID: {self.code}, length: {self.length}, Total weight: {self.weight}+{self.cargo}={self.weight+self.cargo}, {self.weight_capacity} weight capacity"
+        return f"ContainerID:{self.code}\tlength:{self.length}\tTotal weight:{self.weight}+{self.cargo}=\t{self.weight+self.cargo}"
 
     # tostring for list of containers
     def __repr__(self) -> str:

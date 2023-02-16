@@ -1,8 +1,5 @@
 # Author: Andreas Olborg
-
-
 # Import the classes from the other files
-
 from Container import *
 from ContainerSet import *
 from ContainerSetManager import *
@@ -10,7 +7,7 @@ from ContainerShipManager import *
 from ContainerStack import *
 from ContainerSection import *
 
-random.seed(50) # Set the seed for the random number generator
+# random.seed(50) # Set the seed for the random number generator
 
 def task1():
     big_container = Container("ABO123", 20, 2, 0, 20)
@@ -146,7 +143,7 @@ def task5():
     # Load the containers into the ship
     for container in container_set.containers:
         ship.add_container(container)
-
+    
 
     # Find places where containers can be loaded. These are the stacks that are not full, and may not be the most optimal places to load the containers.
     # !!! Make this a function of the ship !!!
@@ -193,8 +190,8 @@ def task6():
 
     print("New ship: \n\n\n")
 
-    # Save the ship to a file
-    save_ship_with_containers_to_file(ship, "./solution/saved_ships/demo_ship_basic.tsv")
+    # Save the ship to a file (pretty version)
+    save_ship_with_containers_to_file(ship, "./solution/saved_ships/demo_ship.tsv")
 
     # Make a new Container Set, and load the containers from the file to a new Ship. These two ships should be identical
     container_set = load_set_of_containers("./solution/set_of_containers/demo_set_5k.tsv")
@@ -205,7 +202,7 @@ def task6():
         ship2.add_container(container)
 
     # Save the ship to a file
-    save_ship_with_containers_to_file(ship2, "./solution/saved_ships/demo_ship_basic2.tsv")
+    # save_ship_with_containers_to_file(ship2, "./solution/saved_ships/demo_ship_basic2.tsv")
 
     # Print the ship
     print(ship2)
@@ -242,8 +239,9 @@ def task8():
     # new loading function that takes into account this constraint, i.e. that piles containers
     # in decreasing weight order.
 
-    # Here, my assumptions #2 are important. These are explained in the README.md file
+    # Here, my assumptions #2 are important. These are explained in the documentation.txt file
     # The function is implemented in the ContainerStack class, in the add_container_to_stack function.
+    # The functionality of this logic is also confirmed in the ship.are_containers_placed_in_descending_order() function.
 
     return
 
@@ -251,25 +249,29 @@ def task9():
     time_start = time.time()
     # Design a function that prints out the load of a ship into a file and function that loads
     # the load of a ship from a file. Propose a TSV format for these files.
-    ship_dimensions = [24, 22, 18] # [length, width, height]
-    ship = ContainerShip(ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
+    ship = load_ship_with_containers_from_file(6500)
 
-    # Create a set of 5000 big and small containers to load into the ship (the set is generated randomly)
-    container_set = ContainerSet()
-    container_set.generate_random_containers(5000) #5000 containers of random length
+    # Calculate the weight of the parts of the ship
+    print("Total weight of the portside: ", ship.calculate_port_weight(), " tonnes")
+    print("Total weight of the starboard: ", ship.calculate_starboard_weight(), " tonnes")
+    print("Total weight of the front: ", ship.calculate_front_weight(), " tonnes")
+    print("Total weight of the middle: ", ship.calculate_middle_weight(), " tonnes")
+    print("Total weight of the back: ", ship.calculate_back_weight(), " tonnes")
+    print("Total weight of the ship: ", ship.calculate_total_weight(), " tonnes")
 
-    save_set_of_containers(container_set, "./solution/set_of_containers/demo_set_5k.tsv")
+    print("Are containers placed in descending order? : ", ship.are_containers_placed_in_descending_order())
+    print("Are ships balanced? : ", ship.is_ship_balanced(5,10))
 
-    # Load the containers containter by container into the ship (task 7 actually)
-    for container in container_set.containers:
-        ship.add_container(container)
 
 
     end_time = time.time()
     print("Code run-time: ", end_time - time_start)
     return
 
-
+def task10():
+    # Design a new loading function that takes into account the stability constraints.
+    # Assumptions #4 describes the solving of this task
+    return
 
 def task11():
     # Assuming that it takes about 4 minutes to load or unload a container with a crane.
@@ -280,85 +282,68 @@ def task11():
     # We are keeping track of an operation counter, and we are adding 1 to it every time we load or unload a container.
     # To get the time, we multiply the operation counter by 4 minutes (240 seconds)
 
-    # Load the ship
-    ship_dimensions = [24, 22, 18] # [length, width, height]
-    ship = ContainerShip(ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
+    # Load the ship from file
+    ship = load_ship_with_containers_from_file(6500)
 
-    # Create a set of 5000 big and small containers to load into the ship (the set is generated randomly)
-    container_set = ContainerSet()
-    container_set.generate_random_containers(10000) #5000 containers of random length
-    save_set_of_containers(container_set, "./solution/set_of_containers/demo_set_10k.tsv")
+    # Calculate the time to load the ship
+    print("If we use 1 crane to load/unload the ship, it will take:")
+    single_crane_loading_operations = ship.get_single_crane_loading_operation_counter()
+    time_for_single_crane_loading = ship.get_time_to_load_ship(single_crane_loading_operations)
+    print(time_for_single_crane_loading)
+
+    # Calculate the time to unload the ship
+    single_crane_unloading_operations = ship.get_single_crane_unloading_operation_counter()
+    time_for_single_crane_unloading = ship.get_time_to_unload_ship(single_crane_unloading_operations)
+    print(time_for_single_crane_unloading)
     
-    # Load the containers containter by container into the ship (task 7 actually)
-    for container in container_set.containers:
-        try:
-            ship.add_container(container)
-        except:
-            print("Could not add container {container.code} to ship, ship is full".format(container=container))
-            break
 
 
-    # Unload the ship
-    ship.unload_all_containers()
 
-    # Calculate the time (in days) 2 decimal places
-    time = ship.get_number_of_operations() * 4 * 60 / (60 * 60 * 24)
-    print("Time to load and unload the ship with 1 crane: ", round(time, 2), " days")
-
+    
 
 def task12():
     # Same questions with 4 cranes. What do you observe?
     # We simplify the the problem by assuming we only have 3 cranes. Then we would need to 
 
-    # Load the ship
-    ship_dimensions = [24, 22, 18] # [length, width, height]
-    ship = ContainerShip(ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
-
-    # Load containers from a file
-    container_set = load_set_of_containers("./solution/set_of_containers/demo_set_10k.tsv")
-
-    for container in container_set.containers:
-        try:
-            ship.add_container(container)
-        except:
-            print("Could not add container {container.code} to ship, ship is full".format(container=container))
-            break
+    # Load the ship from file   
+    ship = load_ship_with_containers_from_file(6500)
     
-    save_ship_with_containers_to_file(ship, "./solution/saved_ships/demo_ship_10k.tsv")
+    # Calculate the time to load the ship with 3 cranes
+    print("If we use 3 cranes to load/unload the ship, it will take:")
+    max_operations_for_three_cranes = ship.get_max_triple_crane_loading_operation_counter()
+    time_for_three_cranes = ship.get_time_to_load_ship(max_operations_for_three_cranes)
+    print(time_for_three_cranes)
 
-    sections = ship.get_sections()
-    front_crane_operation_count = sections[0].get_number_of_operations_in_section() + sections[1].get_number_of_operations_in_section()
-    middle_crane_operation_count = sections[2].get_number_of_operations_in_section() + sections[3].get_number_of_operations_in_section()
-    back_crane_operation_count = sections[4].get_number_of_operations_in_section() + sections[5].get_number_of_operations_in_section()
-    print("Front crane operations: ", front_crane_operation_count)
-    print("Middle crane operations: ", middle_crane_operation_count)
-    print("Back crane operations: ", back_crane_operation_count)
+    # Calculate the time to unload the ship with 3 cranes
+    max_operations_for_three_cranes = ship.get_max_triple_crane_unloading_operation_counter()
+    time_for_three_cranes = ship.get_time_to_unload_ship(max_operations_for_three_cranes)
+    print(time_for_three_cranes)
 
-    get_max_number_of_operations = lambda x, y: x if x > y else y
-    max_number_of_operations = get_max_number_of_operations(front_crane_operation_count, get_max_number_of_operations(middle_crane_operation_count, back_crane_operation_count))
-    print("Max number of operations of the three cranes: ", max_number_of_operations, " it takes ", round(max_number_of_operations * 4 * 60 / (60 * 60 * 24), 2), " days to load the ship with 3 cranes.")
-
-
-    # Must unload the ship and reset the operation counter, to get time to unload the ship
-    ship.unload_all_containers()
-    front_crane_unloading_operation_count = sections[0].get_number_of_operations_in_section() + sections[1].get_number_of_operations_in_section() - front_crane_operation_count
-    middle_crane_unloading_operation_count = sections[2].get_number_of_operations_in_section() + sections[3].get_number_of_operations_in_section() - middle_crane_operation_count
-    back_crane_unloading_operation_count = sections[4].get_number_of_operations_in_section() + sections[5].get_number_of_operations_in_section() - back_crane_operation_count
-
-    print("Front crane operations for unloading: ", front_crane_unloading_operation_count)
-    print("Middle crane operations for unloading: ", middle_crane_unloading_operation_count)
-    print("Back crane operations for unloading: ", back_crane_unloading_operation_count)
-
-    get_max_number_of_operations = lambda x, y: x if x > y else y
-    max_number_of_operations = get_max_number_of_operations(front_crane_unloading_operation_count, get_max_number_of_operations(middle_crane_unloading_operation_count, back_crane_unloading_operation_count))
-    print("Max number of crane operations when unloading the ship with three cranes: ", max_number_of_operations, " it takes ", round(max_number_of_operations * 4 * 60 / (60 * 60 * 24), 2), " days to unload the ship with 3 cranes.")
-
-        
-
-    return
 
 def main():
+    print("Task 1 ----------------------------")
+    task1()
+    print("Task 2 ----------------------------")
+    task2()
+    print("Task 3 ----------------------------")
+    task3()
+    print("Task 4 ----------------------------")
+    task4()
+    print("Task 5 ----------------------------")
+    task5()
+    print("Task 6 ----------------------------")
+    task6()
+    print("Task 7 ----------------------------")
+    task7()
+    print("Task 8 ----------------------------")
+    task8()
+    print("Task 9 ----------------------------")
+    task9()
+    print("Task 10 ----------------------------")
+    task10()
+    print("Task 11 ----------------------------")
     task11()
+    print("Task 12 ----------------------------")
     task12()
 
 

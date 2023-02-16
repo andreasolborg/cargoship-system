@@ -44,6 +44,16 @@ class ContainerStack:
     def get_stack_height(self):
         return len(self.containers)
 
+    def get_weight_at_height_level(self, height_level):
+        weight_at_height_level = 0
+        if height_level >= len(self.containers):
+            return 0
+        else:
+            for container in self.get_container(height_level):
+                weight_at_height_level += container.get_total_weight()
+            return weight_at_height_level
+
+
     def container_stack_is_full(self):
         if len(self.containers) == self.max_stack_height:
             return True
@@ -55,24 +65,6 @@ class ContainerStack:
             return True
         else:
             return False
-
-    # Set functions
-    # def set_sectionID(self, sectionID):
-    #     self.sectionID = sectionID
-
-    # def set_max_stack_height(self, max_stack_height):
-    #     self.max_stack_height = max_stack_height
-
-    # def set_location_in_section(self, location_in_section):
-    #     if len(location_in_section) != 2:
-    #         raise Exception("Location in section must be a tuple of length 2") #Trying out Exceptions
-    #     self.location_in_section = location_in_section
-
-    # def set_containers(self, containers):
-    #     self.containers = containers
-
-    # def set_stack_weight(self, stack_weight):
-    #     self.stack_weight = stack_weight
         
 
     # tostring
@@ -204,25 +196,27 @@ def main():
     c11 = Container(11, 20, 2, 20, 20)
     c12 = Container(12, 20, 2, 20, 20)
 
-    ## Add all the containers to a list, including the 20-feet containers. Then add the list to the stack
+    ## Add all the containers to a list, first we add 40-feet containers
     container_set = [c1, c2, c3, c4, c5, c6, c7, c8]
     
     for container in container_set:
         stack.add_container_to_stack(container)
     
-    # Print the stack, and the operation counter. Should be 197
+    # Print the stack, and the operation counter. Should be 46
+    print(stack.get_container(0))
+    print("printing weights at each level in the stack", stack.get_weight_at_height_level(0))
 
 
     # Create a new stack for testing purposes
-    stack2 = ContainerStack("A", (1, 0), 18)
+    stack2 = ContainerStack("B", (1, 0), 18)
     
-    container_set = []
+    container_set.clear()
     container_set = [c1, c2, c3, c4, c5, c6, c7, [c9, c10], [c11, c12]]
     
     for container in container_set:
         stack2.add_container_to_stack(container)
     
-    # Print the stack, and the operation counter. Should be 197
+    # Print the stack, and the operation counter. Should be 67
     print(stack2)
     for container in stack2.containers:
         for c in container:
@@ -236,12 +230,11 @@ def main():
         for c in container:
             print(c)
 
+    print("printing weights at each level in the stack", stack2.get_weight_at_height_level(0))
+
+
+        
     
-
-    
-
-
-
         
 if __name__ == "__main__":
     main()

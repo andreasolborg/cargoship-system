@@ -122,7 +122,7 @@ Functionality for the restriction of 2 consecutive 20-feet containers:
 - A 40-feet container must be placed either directly ontop of 2 consecutive 20-feet container or directly ontop of a 40-feet container.
 - 20-feet containers comes in fixed pairs. After they are "glued" together, they cannot be separated, and is treated like a single 40-feet container when sorting based on weight. It still takes up 2 consecutive grid spots, and takes 2 operations to place.
 - When unloading a whole ship, it is at the harbor and therefore we do not need to worry about the ship being balanced. This will also vastly reduce the number of operations needed to unload the ship.
-- Task 10: It should need be nessecary to have this when placing at the lightest_stack in the lightest_section. The ship itself doesnt have any weight so we do not check for stability until 100 containers are loaded. Or we can just check after every container has been loaded (the easy way out)
+- Task 10: It should need be nessecary to have this when placing at the lightest_stack in the lightest_section. We can just check after every container has been loaded (the easy way out). I have done some testing and for 1000 simulations, it is always balanced for a fully loaded ship.
 - When loading ship from file, 
 
 - Task 12: We have 3 cranes, because of the 3x2 grid we have implemented. If we were to have a 4x2 grid for 4 cranes we would need to tweak our section_length. This would however make it harder to calculate front, middle and end section.
