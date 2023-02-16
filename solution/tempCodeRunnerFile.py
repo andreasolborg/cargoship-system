@@ -1,11 +1,12 @@
-        for container in container_set.containers:
-            try:
-                self.add_container(container)
-            except Exception as e:
-                return
-
-        if self.is_ship_balanced(5, 10) == True:
-            print("Ship is balanced")
-            
+        if len(self.containers) == 0:
+            raise Exception("Stack is empty")
         else:
-            print("Ship is not balanced")
+            for index, stack in enumerate(self.containers):
+                if container in stack:
+                    self.containers.pop(index)
+                    for c in stack:
+                        self.stack_weight -= c.get_total_weight()
+                        self.operationCounter += 1
+                    self.update_top_weight()
+                    return stack
+            raise Exception("Container not found in stack")

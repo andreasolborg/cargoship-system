@@ -139,16 +139,34 @@ class ContainerStack:
             self.update_top_weight()
             return container
 
+    # Remove container from stack using pop and push functions such that the stack is always sorted by weight. We use a temporary list to store the containers that are popped from the stack and then push them back to the stack after the container is removed
     def remove_container_from_stack(self, container):
+        if len(self.containers) == 0:
+            raise Exception("Stack is empty")
+        else:
+            temporary_storing_stack = []
+            while container not in self.containers[-1]:
+                temporary_storing_stack.append(self.pop_container_from_stack())
+            self.pop_container_from_stack()
+            for temp_stack_pop in reversed(temporary_storing_stack):
+                self.push_container_to_stack(temp_stack_pop)
+                    
+
+
+
+    def remove_container_from_stack1(self, container):
         if len(self.containers) == 0:
             raise Exception("Stack is empty")
         else:
             for index, stack in enumerate(self.containers):
                 if container in stack:
                     self.containers.pop(index)
+
+                    print(len(self.containers))
                     for c in stack:
                         self.stack_weight -= c.get_total_weight()
                         self.operationCounter += 1
+
                     self.update_top_weight()
                     return stack
             raise Exception("Container not found in stack")
@@ -231,6 +249,7 @@ def main():
             print(c)
 
     print("printing weights at each level in the stack", stack2.get_weight_at_height_level(0))
+    print(stack2)
 
 
         

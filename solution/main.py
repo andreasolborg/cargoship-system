@@ -212,7 +212,7 @@ def task6():
     print("Time load the ship and saving it: ", end_time - time_start)
 
 def task7():
-    # THE PART WHERE YOU ARE SUPPOSED TO LOAD A SHIP CONTAINER BY CONTAINER IS SOLVED AND DEMONSTRATED IN SAVE_SHIP_WITH_CONTAINERS_TO_FILE(). 
+    # THE PART WHERE YOU ARE SUPPOSED TO LOAD A SHIP CONTAINER BY CONTAINER IS SOLVED AND DEMONSTRATED IN SAVE_SHIP_WITH_CONTAINERS_TO_FILE() IN THE CONTAINERSHIPMANAGER CLASS
     # THIS FUNCTION IS CALLED IN TASK6()
     ship_dimensions = [24, 22, 18] # [length, width, height]
     ship = ContainerShip(ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
@@ -232,7 +232,8 @@ def task7():
     # Unload the ship container by container by always popping from the heaviest stack in the heaviest section
     # Store the popped containers in a list (referring to the task description of "corresponding ordered list of containers")
     popped_containers = ship.unload_all_containers()
-    print("Popped containers: ", popped_containers)    
+    for container in popped_containers:
+        print("Unloading ship... Popped container: ", container)
     
 def task8():
     # For stability reasons, heady containers must be placed below light ones. Design a
@@ -321,30 +322,33 @@ def task12():
 
 
 def main():
-    print("Task 1 ----------------------------")
+    begin_time = time.time()
+    print("------------------------------------- TASK 1 -------------------------------------")
     task1()
-    print("Task 2 ----------------------------")
+    print("------------------------------------- TASK 2 -------------------------------------")
     task2()
-    print("Task 3 ----------------------------")
+    print("------------------------------------- TASK 3 -------------------------------------")
     task3()
-    print("Task 4 ----------------------------")
+    print("------------------------------------- TASK 4 -------------------------------------")
     task4()
-    print("Task 5 ----------------------------")
+    print("------------------------------------- TASK 5 -------------------------------------")
     task5()
-    print("Task 6 ----------------------------")
+    print("------------------------------------- TASK 6 -------------------------------------")
     task6()
-    print("Task 7 ----------------------------")
+    print("------------------------------------- TASK 7 -------------------------------------")
     task7()
-    print("Task 8 ----------------------------")
+    print("------------------------------------- TASK 8 -------------------------------------")
     task8()
-    print("Task 9 ----------------------------")
+    print("------------------------------------- TASK 9 -------------------------------------")
     task9()
-    print("Task 10 ----------------------------")
+    print("------------------------------------- TASK 10 -------------------------------------")
     task10()
-    print("Task 11 ----------------------------")
+    print("------------------------------------- TASK 11 -------------------------------------")
     task11()
-    print("Task 12 ----------------------------")
+    print("------------------------------------- TASK 12 -------------------------------------")
     task12()
+    end_time = time.time()
+    print("Total run-time of all tasks: ", end_time - begin_time)
 
 
 
