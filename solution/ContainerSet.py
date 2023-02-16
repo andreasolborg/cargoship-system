@@ -30,13 +30,15 @@ class ContainerSet:
 
     # Generate a list of random containers using add_container and remove_container functions
     # Task 2.1.3
-    def generate_random_containers(self, set_size, size=None):
+    def generate_random_containers(self, set_size, size=None, cargo=None):
         for i in range(set_size):
             container = generate_random_container(size)
+            cargo = random.randint(0, container.weight_capacity)
+            container.set_cargo(cargo)
             self.add_container_to_set(container)
         
     # Generate empty containers for later use
-    def generate_n_empty_containers(self, set_size, size):
+    def generate_n_empty_containers(self, set_size, size=None):
         for i in range(set_size):
             container = generate_random_container(size)
             container.set_cargo(0)
@@ -63,7 +65,7 @@ class ContainerSet:
 
 def standard_demo():
     container_set = ContainerSet()
-    container_set.generate_random_containers(10)
+    container_set.generate_random_containers(100)
     print(container_set.containers)
     container_to_remove = container_set.get_nth_container(0)
     print("We are removing container with code: ", container_to_remove.code)
@@ -76,6 +78,7 @@ def standard_demo():
 def advanced_demo():
     container_set = ContainerSet()
     container_set.generate_n_empty_containers(10)
+    print(container_set.containers)
     container_to_remove = container_set.get_nth_container(1)
     print("We are removing container with code: ", container_to_remove.code)
     container_set.remove_container_from_set(container_to_remove)
@@ -85,13 +88,10 @@ def advanced_demo():
     print("Looking for container with code: ", container_to_look_for, " -> ", container_set.find_container(container_to_look_for))
     
     container_set.flush()
-    container_set.generate_n_20_foot_containers(10, 0)
-    print(container_set.containers)
-    container_set.generate_n_40_foot_containers(10, 0)
     print(container_set.containers)
 
 def main():
-    advanced_demo()
+    standard_demo()
 
 if __name__ == "__main__":
     main()

@@ -38,7 +38,7 @@ class Container:
 
     # tostring
     def __str__(self) -> str:
-        return f"ContainerID:{self.code}\tlength:{self.length}\tTotal weight:{self.weight}+{self.cargo}=\t{self.weight+self.cargo}"
+        return f"ContainerID:{self.code}\tlength:{self.length}\tTotal weight= {self.weight} + {self.cargo} = {self.weight+self.cargo}"
 
     # tostring for list of containers
     def __repr__(self) -> str:
@@ -77,29 +77,40 @@ def generate_random_container(size=None):
 
 
 def main():
-    # Task 2.1.1
-    # Create a container with the code "ABO1234567", length 20, width 2, height 2 and weight 2
-    # The loaded weight should be 0. The weight should be 2 tons for a 20 foot container and 4 tons for a 40 foot container.
-    container1 = Container("ABO1234567", 20, 2, 0, 20)
-    print(container1)
-
     start = time.time()
+
+    # Create two containers
+    big_container = Container("ABO123", 20, 2, 0, 20)
+    small_container = Container("ABO345", 40, 4, 0, 22)
+
+    # To-string functions made in the class, and are called automatically when using print(), so we can just print the objects
+    print(big_container)
+    print(small_container)
+
+    # Set the cargo of the containers to 10 tons
+    big_container.set_cargo(10)
+    small_container.set_cargo(10)
+
+    print(big_container)
+    print(small_container)
+
+    # Try to set the cargo of the containers to 1337 tons, which is more than the max weight. This should raise an exception
+    try:
+        big_container.set_cargo(1337)
+    except Exception as e:
+        print(e)
     
-    # Task 2.1.2
-    # Generate a random container with a random code, length, width, height and weight
-    # The loaded weight should be a random number between 0 and capacity. The weight should be 2 tons for a 20 foot container and 4 tons for a 40 foot container.
-    container2 = generate_random_container()
-    # print(container2)
+    try:
+        small_container.set_cargo(1337)
+    except Exception as e:
+        print(e)
+        
+    # The cargo should still be 10 tons
+    print(small_container)
+    print(big_container)
 
-    # Task 2.1.3
-    # Create a list of 10 random containers
-    # Print the list
-    list_of_containers = []
-    for _ in range(100):
-        list_of_containers.append(generate_random_container())
-    # print(list_of_containers)
-
-    print(list_of_containers)
+    random_container = generate_random_container()
+    print(random_container)
 
 
     print(time.time() - start)

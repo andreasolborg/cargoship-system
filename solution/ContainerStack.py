@@ -1,8 +1,8 @@
 from Container import *
 
 class ContainerStack:
-    def __init__(self, sectionID, location_in_section, max_stack_height):
-        self.sectionID = sectionID
+    def __init__(self, section_id, location_in_section, max_stack_height):
+        self.section_id = section_id
         self.max_stack_height = max_stack_height
         self.location_in_section = location_in_section
         self.number_of_containers = 0
@@ -12,8 +12,8 @@ class ContainerStack:
         self.operationCounter = 0
     
     # Get functions 
-    def get_sectionID(self):
-        return self.sectionID
+    def get_section_id(self):
+        return self.section_id
 
     def get_max_stack_height(self):
         return self.max_stack_height
@@ -69,7 +69,7 @@ class ContainerStack:
 
     # tostring
     def __str__(self) -> str:
-        return f"Container stack in section {self.sectionID} at location {self.location_in_section} stackweight:{self.stack_weight} #containers:{self.get_number_of_containers()}"
+        return f"Container stack in section {self.section_id} at location {self.location_in_section} stackweight:{self.stack_weight} #containers:{self.get_number_of_containers()}"
     
     # Updating top weight so that sorting is easier
     def update_top_weight(self):
@@ -177,15 +177,16 @@ class ContainerStack:
             if container in stack:
                 return index
         return -1
-        
-    # print the stack as a nested list, where each element is a list of containers shown as a string (e.g. [first container code, second container code])
-    def print_stack_as_nested_list(self):
-        print("Printing stack as nested list")
-        print(self.containers)
 
     # Tostring function
     def __str__(self) -> str:
         return f"Container stack at location {self.location_in_section}, has an operation counter of {self.operationCounter} and a stack weight of {self.stack_weight} tons"
+
+    def print_stack_as_list(self):
+        for container in self.containers:
+            for c in container:
+                print(c)
+
 
 # Main function that creates a container stack and adds 10 containers to it
 def main():
@@ -221,7 +222,7 @@ def main():
         stack.add_container_to_stack(container)
     
     # Print the stack, and the operation counter. Should be 46
-    print(stack.get_container(0))
+    print("printing container at index 0", stack.get_container(0))
     print("printing weights at each level in the stack", stack.get_weight_at_height_level(0))
 
 
@@ -236,17 +237,13 @@ def main():
     
     # Print the stack, and the operation counter. Should be 67
     print(stack2)
-    for container in stack2.containers:
-        for c in container:
-            print(c)
+    stack2.print_stack_as_list()
 
     # Remove a container from the stack
     stack2.remove_container_from_stack(c12)
 
     print("------------------ After removing container 12 ------------------")
-    for container in stack2.containers:
-        for c in container:
-            print(c)
+    stack2.print_stack_as_list()
 
     print("printing weights at each level in the stack", stack2.get_weight_at_height_level(0))
     print(stack2)
