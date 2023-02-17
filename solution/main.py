@@ -1,4 +1,5 @@
-# Author: Andreas Olborg
+# Author: Andreas Olborg - Group 47
+ 
 # Import the classes from the other files
 from Container import *
 from ContainerSet import *

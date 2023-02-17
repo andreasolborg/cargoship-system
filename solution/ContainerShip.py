@@ -1,3 +1,4 @@
+# Author: Andreas Olborg - Group 47
 import time
 from Container import *
 from ContainerSet import *

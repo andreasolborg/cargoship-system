@@ -1,4 +1,4 @@
-## Ikke ha mange kommentarer. Koden skal være lesbar uten kommentarer
+# Author: Andreas Olborg - Group 47
 import random
 import time
 

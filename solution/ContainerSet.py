@@ -1,3 +1,5 @@
+# Author: Andreas Olborg - Group 47
+
 from Container import *
 
 class ContainerSet:
@@ -27,10 +29,8 @@ class ContainerSet:
     def flush(self):
         self.containers = []
             
-
     # Generate a list of random containers (size and cargo are optional)
     def generate_random_containers(self, set_size, size=None, cargo=None):
-        
         for i in range(set_size):
             container = generate_random_container(size)
             cargo = random.randint(0, container.weight_capacity)
@@ -43,23 +43,6 @@ class ContainerSet:
             container = generate_random_container(size)
             container.set_cargo(0)
             self.add_container_to_set(container)
-        
-    
-    # Generate list of 20 foot containers
-    # def generate_n_20_foot_containers(self, set_size, cargo):
-    #     for i in range(set_size):
-    #         container = Container(create_container_code(), 20, 2, 0, 20)
-    #         cargo = random.randint(0, 20)
-    #         container.set_cargo(cargo)
-    #         self.add_container_to_set(container)
-    
-    # # Generate list of 40 foot containers
-    # def generate_n_40_foot_containers(self, set_size, cargo):
-    #     for i in range(set_size):
-    #         container = Container(create_container_code(), 40, 4, 0, 22)
-    #         cargo = random.randint(0, 22)
-    #         container.set_cargo(cargo)
-    #         self.add_container_to_set(container)
             
     
 # Look for a container that is in the list, and remove it, then look for a container that is not in the list

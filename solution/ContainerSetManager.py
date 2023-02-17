@@ -1,5 +1,6 @@
-# Task 4
-# Class for saving and loading the container data from a file
+# Author: Andreas Olborg - Group 47
+
+# File for saving and loading the container data from a file
 # We are using TSV Values (Tab Separated Values) for this
 from Container import Container
 from ContainerSet import ContainerSet

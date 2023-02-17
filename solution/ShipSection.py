@@ -1,16 +1,15 @@
+# Author: Andreas Olborg - Group 47
 from ContainerStack import ContainerStack
 from ContainerSetManager import *
 from ContainerSet import *
 
 import random
 
-
-# Standard ship dimensions as defined in the assignment
 SHIP_LENGTH = 24
 SHIP_WIDTH = 22
 SHIP_HEIGHT = 18
 ship_dimensions = (SHIP_LENGTH, SHIP_WIDTH, SHIP_HEIGHT)
-max_stack_height = 5
+max_stack_height = 18
 
 
 class ShipSection:
@@ -25,8 +24,6 @@ class ShipSection:
         self.full_container_stacks = []
         self.holding_containers = [] # Containers that are being held for a 20ft container
         self.section_weight = 0
-        
-
         # Create container stacks
         for x in range(0, self.section_length):
             for y in range(0, self.section_width):
@@ -74,8 +71,7 @@ class ShipSection:
         for stack in self.get_container_stacks():
             section_weight += stack.get_stack_weight()
         return section_weight
-        
-        
+            
     def get_lightest_container_stack(self):
         if len(self.available_container_stacks) == 0:
             return "No stacks in section"
@@ -184,9 +180,9 @@ def main():
     # Create a ship section
     section = ShipSection(1, ship_dimensions[0]//6, ship_dimensions[1]//2, ship_dimensions[2])
 
-    # Load a set of containers
-    demo_set = load_set_of_containers("fun_test_containers.tsv")
-
+    # Create a demo set of containers
+    demo_set = ContainerSet()
+    demo_set.generate_random_containers(1000)
 
     # Add containers to the section
     for container in demo_set.containers:
@@ -198,7 +194,6 @@ def main():
 
     print("------ Inspect the section ------")
     print(section)
-
 
     print("------ Inspect a the first stack ------")
     stack_to_inspect = section.get_stack((0, 0))

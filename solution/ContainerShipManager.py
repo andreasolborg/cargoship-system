@@ -1,3 +1,4 @@
+# Author: Andreas Olborg - Group 47
 from Container import Container
 from ContainerShip import ContainerShip
 from ContainerSetManager import *
