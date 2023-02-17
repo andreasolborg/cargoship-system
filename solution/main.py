@@ -213,6 +213,7 @@ def task7():
     container_set = ContainerSet()
     container_set.containers = []
     set_size = 6500
+
     container_set.generate_random_containers(set_size) # 5000 containers of random length
 
     save_set_of_containers(container_set, "./solution/set_of_containers/set_of_{}_containers.tsv".format(set_size))
@@ -402,11 +403,18 @@ def load_individual_containers_test():
 
     # Generate a set of containers and load the ship with them
     container_set = ContainerSet()
+    container_set.add_container_to_set(c1)
+    container_set.add_container_to_set(c2)
+    container_set.add_container_to_set(c3)
+    container_set.add_container_to_set(c4)
+    container_set.add_container_to_set(c5)
     container_set.generate_random_containers(2400)
     ship.load_ship(container_set)
-    save_ship_with_containers_to_file(ship, "fun_test.tsv")
-    save_set_of_containers(container_set, "fun_test_containers.tsv")
+    save_ship_with_containers_to_file(ship, "./solution/saved_ships/individual_containers_ship_test.tsv")
+    save_set_of_containers(container_set, "./solution/set_of_containers/individual_containers_test.tsv")
     print(ship)
+
+    reset()
 
 def import_non_existing_ship_file():
     # Import a file that does not exist. It should make a new set of containers and load a new ship with them, and save the ship to a new file
@@ -451,32 +459,32 @@ def main():
     print("------------------------------------- TASK 1 -------------------------------------")
     task1()
     print("------------------------------------- TASK 2 -------------------------------------")
-    task2()
+    # task2()
     print("------------------------------------- TASK 3 -------------------------------------")
-    task3()
+    # task3()
     print("------------------------------------- TASK 4 -------------------------------------")
-    task4()
+    # task4()
     print("------------------------------------- TASK 5 -------------------------------------")
-    task5()
+    # task5()
     print("------------------------------------- TASK 6 -------------------------------------")
-    task6()
+    # task6()
     print("------------------------------------- TASK 7 -------------------------------------")
-    task7()
+    # task7()
     print("------------------------------------- TASK 8 -------------------------------------")
-    task8()
+    # task8()
     print("------------------------------------- TASK 9 -------------------------------------")
-    task9()
+    # task9()
     print("------------------------------------- TASK 10 -------------------------------------")
-    task10()
+    # task10()
     print("------------------------------------- TASK 11 -------------------------------------")
-    task11()
+    # task11()
     print("------------------------------------- TASK 12 -------------------------------------")
-    task12()
+    # task12()
 
-    edge_cases()
-    load_individual_containers_test()
-    import_non_existing_ship_file()
-    crane_test()
+    # edge_cases()
+    # load_individual_containers_test()
+    # import_non_existing_ship_file()
+    # crane_test()
     end_time = time.time()
     print("Total run-time of all tasks: ", end_time - begin_time)
 
