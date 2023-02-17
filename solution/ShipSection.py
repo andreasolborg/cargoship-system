@@ -25,6 +25,7 @@ class ShipSection:
         self.full_container_stacks = []
         self.holding_containers = [] # Containers that are being held for a 20ft container
         self.section_weight = 0
+        
 
         # Create container stacks
         for x in range(0, self.section_length):
@@ -58,8 +59,15 @@ class ShipSection:
 
     def get_container_stacks(self):
         return self.available_container_stacks + self.full_container_stacks
-    
 
+    def get_containers(self):
+        containers = []
+        for stack in self.get_container_stacks():
+            for container_list in stack.get_containers():
+                for container in container_list:
+                    containers.append(container)
+        return containers
+    
     # Get section weight by adding up the weight of all stacks in full and available stacks
     def get_section_weight(self):
         section_weight = 0
@@ -112,7 +120,6 @@ class ShipSection:
             counter += stack.get_number_of_operations()
         return counter
 
-
     # Functionalities
     def is_section_full(self):
         if len(self.available_container_stacks) == 0:
@@ -126,11 +133,9 @@ class ShipSection:
         else:
             return False
 
-
     def add_container_to_section(self, container):
         if self.is_section_full() == True:
             return
-            raise Exception("Container stack is full, cannot add container, with ID: " + container.get_code())
         else:    
             container_stack = self.get_lightest_container_stack()
             if container_stack.container_stack_is_full() == True:
@@ -148,7 +153,6 @@ class ShipSection:
                     container_stack.add_container_to_stack(container)
                 self.section_weight += container.get_weight()
 
-
     def pop_container_from_heaviest_stack(self):
         heaviest_stack = self.get_heaviest_container_stack()
         if heaviest_stack.container_stack_is_empty() == True:
@@ -158,51 +162,51 @@ class ShipSection:
             for c in container:
                 self.section_weight -= c.get_total_weight()
             return container, heaviest_stack
-
-              
+       
     # tostring to print the section as a 2d grid of the length of each stack in both available and full stacks
     def __str__(self) -> str:
-        return_string =  "Section ID: " + str(self.section_id) + "\n#OPERATIONS:[height]-[WEIGHT]\n"
+        return_string =  "Section ID: " + str(self.section_id) + "\nStack Height--Number of Containers--Stack Weight--Stack Operations\n"
         total = 0
         for y in range(0, self.section_width):
             for x in range(0, self.section_length):
                 for stacks in self.get_container_stacks():
                     if stacks.location_in_section == (x, y):
-                        return_string += str(stacks.get_number_of_operations()) + "--" + str(stacks.get_stack_height()) + "--" + str(stacks.get_stack_weight()) + "\t"
+                        return_string += str(stacks.get_stack_height()) + "--" + str(stacks.get_number_of_containers()) + "--" + str(stacks.get_stack_weight()) + "--" + str(stacks.get_number_of_operations()) + "\t"
                         total += stacks.get_stack_weight()
             return_string += "\n"
             
         return_string += "Total section weight: " + str(total) + "\n"
-        return_string += "Total number of operations: " + str(self.get_number_of_operations_in_section()) + "\n"
+        return_string += "Total number of operations: " + str(self.get_number_of_operations_in_section()) + "\n\n"
         return return_string
     
-
 def main():
+    print("\n-------------- Ship Section ---------------\n")
     # Create a ship section
     section = ShipSection(1, ship_dimensions[0]//6, ship_dimensions[1]//2, ship_dimensions[2])
-    lightest_stack = section.get_lightest_container_stack()
-    #print(lightest_stack, "is the lightest stack, ")
-    # Create a container
+
+    # Load a set of containers
     demo_set = load_set_of_containers("fun_test_containers.tsv")
 
 
-    # Print all the stacks in the section in as a 2d grid 
+    # Add containers to the section
     for container in demo_set.containers:
         try:
             section.add_container_to_section(container)
         except Exception as e:
             print(e)
             break
+
+    print("------ Inspect the section ------")
     print(section)
 
 
-    print("------ Inspect a stack ------")
+    print("------ Inspect a the first stack ------")
     stack_to_inspect = section.get_stack((0, 0))
     print(stack_to_inspect)
     stack_to_inspect.print_stack_as_list()
     
-    print("------ Inspect a stack ------")
-    stack_to_inspect = section.get_stack((3, 8))
+    print("------ Inspect the heaviest stack ------")
+    stack_to_inspect = section.get_heaviest_container_stack()
     print(stack_to_inspect)
     stack_to_inspect.print_stack_as_list()
         
@@ -214,13 +218,13 @@ def main():
     print(stack.get_location_in_section(), "is the location of the popped container\n")
     
     print("------ Pop a container from the heaviest stack ------")
+    stack_to_inspect = section.get_heaviest_container_stack()
     popped_container = section.pop_container_from_heaviest_stack()
     print(popped_container, "is the popped container")
     print(stack.get_location_in_section(), "is the location of the popped container\n")
 
-
     print("Weight per height level in section: ")
-    weightlist = section.get_weight_per_height_level_in_section()
+    weightlist = section.get_weight_per_height_level_in_section() # Should be a descending list of weights, since the containers are sorted by weight
     print(weightlist, "\n")
 
 if __name__ == "__main__":

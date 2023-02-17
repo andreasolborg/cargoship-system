@@ -28,9 +28,9 @@ class ContainerSet:
         self.containers = []
             
 
-    # Generate a list of random containers using add_container and remove_container functions
-    # Task 2.1.3
+    # Generate a list of random containers (size and cargo are optional)
     def generate_random_containers(self, set_size, size=None, cargo=None):
+        
         for i in range(set_size):
             container = generate_random_container(size)
             cargo = random.randint(0, container.weight_capacity)
@@ -62,19 +62,20 @@ class ContainerSet:
     #         self.add_container_to_set(container)
             
     
-
+# Look for a container that is in the list, and remove it, then look for a container that is not in the list
 def standard_demo():
     container_set = ContainerSet()
     container_set.generate_random_containers(100)
     print(container_set.containers)
     container_to_remove = container_set.get_nth_container(0)
-    print("We are removing container with code: ", container_to_remove.code)
+    print("We are removing container with code: ", container_to_remove.get_code())
     container_set.remove_container_from_set(container_to_remove)
-    container_to_look_for = "01"
-    print("We are looking for container with code: ", container_to_look_for, " and we found: ", container_set.find_container(container_to_look_for))
-    container_to_look_for = "02"
-    print("We are looking for container with code: ", container_to_look_for, " and we found a contaier with following information: ", container_set.find_container(container_to_look_for))
+    container_to_look_for = "0000"
+    print("We are looking for container with code: ", container_to_look_for, container_set.find_container(container_to_look_for))
+    container_to_look_for = "0002"
+    print("We are looking for container with code: ", container_to_look_for, " and we found a contaier with following ID: ", container_set.find_container(container_to_look_for).get_code())
             
+# Look for a container that is not in the list
 def advanced_demo():
     container_set = ContainerSet()
     container_set.generate_n_empty_containers(10)
@@ -91,7 +92,13 @@ def advanced_demo():
     print(container_set.containers)
 
 def main():
+    print("----- Standard demo -----\n")
+
     standard_demo()
+
+    print("\n\n----- Advanced demo -----\n")
+
+    advanced_demo()
 
 if __name__ == "__main__":
     main()

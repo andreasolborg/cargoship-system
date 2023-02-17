@@ -7,7 +7,7 @@ from ContainerShipManager import *
 from ContainerStack import *
 from ShipSection import *
 
-random.seed(50) # Set the seed for the random number generator
+# random.seed(50) # Set the seed for the random number generator
 
 def task1():
     big_container = Container("ABO123", 20, 2, 0, 20)
@@ -86,9 +86,7 @@ def task2():
     print(container_set.containers)
 
 def task3():
-    # Design a function that generates a container “at random”, by choosing a length, a
-    # load and code for the container. This function may be parametric. Design a function
-    # (using the previous one) that generates at random a set of containers.
+    # Create 3 random containers, with length 20, 40 and None (randomly chosen)
     random_container = generate_random_container()
     print(random_container)
 
@@ -98,23 +96,23 @@ def task3():
     random_40ft_container = generate_random_container(40)
     print(random_40ft_container)
 
+
     # Create a new container set
     container_set = ContainerSet()
-    # Generate a set of random containers, with length 20
+    # Generate a set of size 10 of random containers, with length 20
     container_set.generate_random_containers(10, 20, None)
     print(container_set.containers)
 
     container_set.flush()
-    # Generate a set of random containers, with length 40. The set should be empty, since we flushed the previous set
+    # Generate a set of size 10 of random containers, with length 40.
     container_set.generate_random_containers(10, 40, None)
     print(container_set.containers)
 
     container_set.flush()
 
 def task4():
-    demo_set = ContainerSet()
-
     # Generate a set of 15 random containers, with length 20 or 40 (chosen at random)
+    demo_set = ContainerSet()
     demo_set.generate_random_containers(15)
     save_set_of_containers(demo_set, "./solution/set_of_containers/demo_set.tsv")
     # The set should be saved in the file "demo_set.tsv" in the folder "set_of_containers"
@@ -127,12 +125,7 @@ def task4():
     print(demo_set.containers)
 
 def task5():
-    # Design a data structure to encode container ships implement the associated management
-    # functions: look for a container in the ship, look for a place where a container
-    # can be loaded, load a container into the ship, remove a container from the ship. . . .
-    # Note that it is not possible to load a 40 feet container onto a single 20 feet container
-    # (there should no holes).
-
+    
     # Here, my assumptions #1 are important. These are explained in the README.md file
     ship_dimensions = [24, 22, 18] # [length, width, height]
     ship = ContainerShip(ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
@@ -140,19 +133,22 @@ def task5():
     # Create a set of 500 big and small containers (100 of each) to load into the ship (the set is generated randomly)
     container_set = ContainerSet()
     container_set.generate_random_containers(250, 20)
-    container_set.generate_random_containers(250, 40)
 
     # Load the containers into the ship
     for container in container_set.containers:
         ship.add_container(container)
     
-
+    container_set.flush()
+    container_set.generate_random_containers(250, 40)
+    for container in container_set.containers:
+        ship.add_container(container)
+    
+    
     # Find places where containers can be loaded. These are the stacks that are not full, and may not be the most optimal places to load the containers.
-    # !!! Make this a function of the ship !!!
-    available_stacks = ship.get_stacks_that_are_not_full()
-    print("Available stacks to load containers: ")
-    for stack in available_stacks:
-        print(stack.get_location_in_section(), "in section ", stack.get_section_id())
+    ship.get_available_stacks()
+
+    # Print the ship
+    print(ship)
 
     # Find a container in the ship
     container_to_find, section, stack = ship.find_container("0490")
@@ -162,14 +158,9 @@ def task5():
     print("Removing container: ", container_to_find.get_code())
     ship.remove_container("0490") # This function takes in the code of the container to remove
 
-
     # Find a container in the ship
     container_to_find = ship.find_container("0490")
-    print("Container to find: ", container_to_find)
-    
-    # Print the ship
-    print(ship)
-
+   
 def task6():
     time_start = time.time()
     # Design a function that prints out the load of a ship into a file and function that loads
@@ -180,7 +171,7 @@ def task6():
     # Create a set of 5000 big and small containers to load into the ship (the set is generated randomly)
     container_set = ContainerSet()
     set_size = 6500
-    container_set.generate_random_containers(set_size) # 5000 containers of random length
+    container_set.generate_random_containers(set_size) # set_size containers of random length
 
     save_set_of_containers(container_set, "./solution/set_of_containers/set_of_{}_containers.tsv".format(set_size))
     # Load the containers containter by container into the ship (task 7 actually)
@@ -220,37 +211,28 @@ def task7():
 
     # Create a set of 5000 big and small containers to load into the ship (the set is generated randomly)
     container_set = ContainerSet()
+    container_set.containers = []
     set_size = 6500
     container_set.generate_random_containers(set_size) # 5000 containers of random length
 
     save_set_of_containers(container_set, "./solution/set_of_containers/set_of_{}_containers.tsv".format(set_size))
 
     # Load the containers containter by container into the ship (task 7 actually)
-    containers_in_ship = []
-    for container in container_set.containers:
-        try:
-            ship.add_container(container)
-            containers_in_ship.append(container)
-        except Exception as e:
-            print("Container could not be added to the ship: ", container.get_code())
-            print("Error: ", e)
-            break
+    ship.load_ship(container_set)
  
+    # Print the the corresponding ordered list of containers
+    print("The corresponding ordered list of containers: ")
+    containers_on_ship = ship.get_containers()
+    print(containers_on_ship)
+
     # Unload the ship container by container by always popping from the heaviest stack in the heaviest section
-    # Store the popped containers in a list (referring to the task description of "corresponding ordered list of containers")
-    popped_containers = ship.unload_all_containers()
-    for container, stack in popped_containers:
-        if len(container) == 1:
-            print("Unloading ID {} from section {} and stack {}".format(container[0].get_code(), stack.get_section_id(), stack.get_location_in_section()))
-        else:
-            print("Unloading ID {} and {} from section {} and stack {}".format(container[0].get_code(), container[1].get_code(), stack.get_section_id(), stack.get_location_in_section()))
-    
+    # Store the popped containers, with stack information in a list (referring to the task description of "corresponding ordered list of containers")
+    popped_containers  = ship.unload_all_containers()
+    print(ship.get_unloaded_containers(popped_containers))
+        
 def task8():
-    # For stability reasons, heady containers must be placed below light ones. Design a
-    # new loading function that takes into account this constraint, i.e. that piles containers
-    # in decreasing weight order.
-    print("Read the documentation.txt file for the assumptions I made for this task.")
-    # Here, my assumptions #2 are important. These are explained in the documentation.txt file
+    print("Read the documentation file for the assumptions I made for this task.")
+    # Here, my assumptions are important. These are explained in the documentation.txt file
     # The function is implemented in the ContainerStack class, in the add_container_to_stack function.
     # The functionality of this logic is also confirmed in the ship.are_containers_placed_in_descending_order() function.
 
@@ -258,12 +240,11 @@ def task8():
 
 def task9():
     time_start = time.time()
-    # Design a function that prints out the load of a ship into a file and function that loads
-    # the load of a ship from a file. Propose a TSV format for these files.
-    ship = load_ship_with_containers_from_file(6500)
+    print("Read the documentation file for the assumptions I made for this task.")
 
+
+    ship = load_ship_with_containers_from_file(6500)
     print(ship)
-    print(section for section in ship.get_sections())
 
     print("Operations on the ship:", ship.get_number_of_operations())
 
@@ -276,21 +257,19 @@ def task9():
     print("Total weight of the back: ", ship.calculate_back_weight(), " tonnes")
     print("Total weight of the ship: ", ship.calculate_total_weight(), " tonnes")
 
-    print("Are containers placed in descending order? : ", ship.are_containers_placed_in_descending_order())
-    for level in ship.get_weight_per_height_level():
-        print("Weight per height level: ", level)
-    print("Are ships balanced? : ", ship.is_ship_balanced(5,10))
+    print("\nAre containers placed in descending order? : ", ship.are_containers_placed_in_descending_order())
+    for level, weight in enumerate(ship.get_weight_per_height_level()):
+        print("Weight at heightlevel", level, " : ", weight)
+    print("\n")
+    ship.is_ship_balanced(5,10)
 
 
 
     end_time = time.time()
     print("Code run-time: ", end_time - time_start)
-    return
 
 def task10():
-    # Design a new loading function that takes into account the stability constraints.
-    # Assumptions #4 describes the solving of this task
-    print("Read the documentation.txt file for the assumptions I made for this task.")
+    print("Read the documentation  file for the assumptions I made for this task.")
     return
 
 def task11():
@@ -308,39 +287,33 @@ def task11():
     # Calculate the time to load the ship
     print("If we use 1 crane to load/unload the ship, it will take:")
     single_crane_loading_operations = ship.get_single_crane_loading_operation_counter()
+    print("Number of operations: ", single_crane_loading_operations, " operations to load the ship")
     time_for_single_crane_loading = ship.get_time_to_load_ship(single_crane_loading_operations)
     print(time_for_single_crane_loading)
 
     # Calculate the time to unload the ship
     single_crane_unloading_operations = ship.get_single_crane_unloading_operation_counter()
+    print("Number of operations: ", single_crane_unloading_operations, " operations to unload the ship")
     time_for_single_crane_unloading = ship.get_time_to_unload_ship(single_crane_unloading_operations)
     print(time_for_single_crane_unloading)
-    
-
-
-
-    
-
+       
 def task12():
-    # Same questions with 4 cranes. What do you observe?
-    # We simplify the the problem by assuming we only have 3 cranes. Then we would need to 
-
+    # We simplify the the problem by assuming we only have 3 cranes.
     # Load the ship from file   
     ship = load_ship_with_containers_from_file(6500)
-    
+
     # Calculate the time to load the ship with 3 cranes
     print("If we use 3 cranes to load/unload the ship, it will take:")
     max_operations_for_three_cranes = ship.get_max_triple_crane_loading_operation_counter()
+    print("Number of operations: ", max_operations_for_three_cranes, " operations to load the ship")
     time_for_three_cranes = ship.get_time_to_load_ship(max_operations_for_three_cranes)
     print(time_for_three_cranes)
 
     # Calculate the time to unload the ship with 3 cranes
     max_operations_for_three_cranes = ship.get_max_triple_crane_unloading_operation_counter()
+    print("Number of operations: ", max_operations_for_three_cranes, " operations to unload the ship")
     time_for_three_cranes = ship.get_time_to_unload_ship(max_operations_for_three_cranes)
     print(time_for_three_cranes)
-
-    print(ship)
-
 
 def edge_cases():
     ship = ContainerShip(24,22,18)
@@ -351,7 +324,6 @@ def edge_cases():
 
     # Load the ship with 1000 empty 40ft containers
     ship.load_ship(container_set)
-
     container_set.containers = []
 
     # Generate 1000 full 40ft containers
@@ -359,21 +331,18 @@ def edge_cases():
 
     # Load the ship with 1000 full 40ft containers
     ship.load_ship(container_set)
-
     container_set.containers = []
 
     # Generate 1000 full 20ft containers
     container_set.generate_random_containers(1000, 20, 20)
 
-    
     # Load the ship with 1000 full 20ft containers
     ship.load_ship(container_set)
-
     container_set.containers = []
 
     # Save the ship to file, this should have the full 20ft containers on the bottom, and the full 40ft containers in the middle, and the empty 40ft containers on top
     # See the edge_cases.tsv file for the result
-    save_ship_with_containers_to_file(ship, "edge_cases.tsv")
+    save_ship_with_containers_to_file(ship, "./solution/saved_ships/edge_cases.tsv")
 
     print(ship)
 
@@ -412,11 +381,8 @@ def edge_cases():
     max_operations_for_three_cranes = ship.get_max_triple_crane_unloading_operation_counter()
     time_for_three_cranes = ship.get_time_to_unload_ship(max_operations_for_three_cranes)
     print(time_for_three_cranes)
-    
 
-    # Generate 1000 empty 40ft containers
-
-def fun_test():
+def load_individual_containers_test():
     # Make individual containers and add them to the ship
     ship = ContainerShip(24,22,18)
 
@@ -434,44 +400,83 @@ def fun_test():
     ship.add_container(c5)
     # c5 and c4 are now added as a pair in the ship
 
+    # Generate a set of containers and load the ship with them
     container_set = ContainerSet()
-    container_set.generate_random_containers(6500)
+    container_set.generate_random_containers(2400)
     ship.load_ship(container_set)
     save_ship_with_containers_to_file(ship, "fun_test.tsv")
     save_set_of_containers(container_set, "fun_test_containers.tsv")
     print(ship)
 
-    return
+def import_non_existing_ship_file():
+    # Import a file that does not exist. It should make a new set of containers and load a new ship with them, and save the ship to a new file
+    set_size = 6500
+    ship = load_ship_with_containers_from_file(set_size)
+    print(ship)
+
+def crane_test():
+    ship = ContainerShip(24,22,18)
+    container_set = ContainerSet()
+    container_set.generate_random_containers(7000)
+    ship.load_ship(container_set)
+
+    # Calculate the time to load the ship
+    print("If we use 1 crane to load/unload the ship, it will take:")
+    single_crane_loading_operations = ship.get_single_crane_loading_operation_counter()
+    print("Single crane loading operations: ", single_crane_loading_operations)
+    time_for_single_crane_loading = ship.get_time_to_load_ship(single_crane_loading_operations)
+    print(time_for_single_crane_loading)
+
+    # Calculate the time to unload the ship
+    single_crane_unloading_operations = ship.get_single_crane_unloading_operation_counter()
+    print("Single crane unloading operations: ", single_crane_unloading_operations)
+    time_for_single_crane_unloading = ship.get_time_to_unload_ship(single_crane_unloading_operations)
+    print(time_for_single_crane_unloading)
+
+    # Calculate the time to load the ship with 3 cranes
+    print("If we use 3 cranes to load/unload the ship, it will take:")
+    max_operations_for_three_cranes = ship.get_max_triple_crane_loading_operation_counter()
+    print("Max operations for three cranes: ", max_operations_for_three_cranes)
+    time_for_three_cranes = ship.get_time_to_load_ship(max_operations_for_three_cranes)
+    print(time_for_three_cranes)
+
+    # Calculate the time to unload the ship with 3 cranes
+    max_operations_for_three_cranes = ship.get_max_triple_crane_unloading_operation_counter()
+    print("Max operations for three cranes: ", max_operations_for_three_cranes)
+    time_for_three_cranes = ship.get_time_to_unload_ship(max_operations_for_three_cranes)
+    print(time_for_three_cranes)
 
 def main():
     begin_time = time.time()
-    # print("------------------------------------- TASK 1 -------------------------------------")
-    # task1()
-    # print("------------------------------------- TASK 2 -------------------------------------")
-    # task2()
-    # print("------------------------------------- TASK 3 -------------------------------------")
-    # task3()
-    # print("------------------------------------- TASK 4 -------------------------------------")
-    # task4()
-    # print("------------------------------------- TASK 5 -------------------------------------")
-    # task5()
-    # print("------------------------------------- TASK 6 -------------------------------------")
-    # task6()
-    # print("------------------------------------- TASK 7 -------------------------------------")
-    # task7()
-    # print("------------------------------------- TASK 8 -------------------------------------")
-    # task8()
-    # print("------------------------------------- TASK 9 -------------------------------------")
-    # task9()
-    # print("------------------------------------- TASK 10 -------------------------------------")
-    # task10()
-    # print("------------------------------------- TASK 11 -------------------------------------")
-    # task11()
-    # print("------------------------------------- TASK 12 -------------------------------------")
-    # task12()
+    print("------------------------------------- TASK 1 -------------------------------------")
+    task1()
+    print("------------------------------------- TASK 2 -------------------------------------")
+    task2()
+    print("------------------------------------- TASK 3 -------------------------------------")
+    task3()
+    print("------------------------------------- TASK 4 -------------------------------------")
+    task4()
+    print("------------------------------------- TASK 5 -------------------------------------")
+    task5()
+    print("------------------------------------- TASK 6 -------------------------------------")
+    task6()
+    print("------------------------------------- TASK 7 -------------------------------------")
+    task7()
+    print("------------------------------------- TASK 8 -------------------------------------")
+    task8()
+    print("------------------------------------- TASK 9 -------------------------------------")
+    task9()
+    print("------------------------------------- TASK 10 -------------------------------------")
+    task10()
+    print("------------------------------------- TASK 11 -------------------------------------")
+    task11()
+    print("------------------------------------- TASK 12 -------------------------------------")
+    task12()
 
-    # edge_cases()
-    fun_test()
+    edge_cases()
+    load_individual_containers_test()
+    import_non_existing_ship_file()
+    crane_test()
     end_time = time.time()
     print("Total run-time of all tasks: ", end_time - begin_time)
 

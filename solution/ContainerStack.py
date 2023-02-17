@@ -25,13 +25,8 @@ class ContainerStack:
         return self.stack_weight
 
     def get_number_of_containers(self):
-        for container in self.containers:
-            if len(container) == 1:
-                self.number_of_containers += 1
-            elif len(container) == 2:
-                self.number_of_containers += 2
         return self.number_of_containers
-    
+        
     def get_container(self, index):
         return self.containers[index]
     
@@ -52,7 +47,6 @@ class ContainerStack:
             for container in self.get_container(height_level):
                 weight_at_height_level += container.get_total_weight()
             return weight_at_height_level
-
 
     def container_stack_is_full(self):
         if len(self.containers) == self.max_stack_height:
@@ -75,8 +69,8 @@ class ContainerStack:
     def update_top_weight(self):
         if len(self.containers) == 0:
             self.top_weight = 0
-        else: # If there are containers in the stack check if the top container is a single container or a list of two containers
-            if len(self.containers[-1]) == 1:   ## Method for getting the top weight of the stack
+        else:                                   # If there are containers in the stack check if the top container is a single container or a list of two containers
+            if len(self.containers[-1]) == 1:   # Method for getting the top weight of the stack
                 containers = self.containers[-1]
                 self.top_weight = containers[0].get_total_weight()
             elif len(self.containers[-1]) == 2:
@@ -92,9 +86,11 @@ class ContainerStack:
             if len(container) == 1:
                 self.containers.append(container)
                 self.stack_weight += container[0].get_total_weight()
+                self.number_of_containers += 1
             elif len(container) == 2:
                 self.containers.append(container)
                 self.stack_weight += (container[0].get_total_weight() + container[1].get_total_weight())
+                self.number_of_containers += 2
             else:
                 raise Exception("Container must be a single container or a list of two containers")
             self.operationCounter += len(container)
@@ -102,7 +98,6 @@ class ContainerStack:
         else:
             raise Exception("Container stack is full")
         
-
     # Add container to stack using push and pop functions such that the stack is always sorted by weight. 
     # If the container is 20-feet it must be placed in a temporary list to ensure 20-feet containers always get loaded as a pair later
     def add_container_to_stack(self, container):
@@ -118,16 +113,13 @@ class ContainerStack:
                 if container[0].get_length() == 40:
                     raise Exception("You cannot load two 40-feet containers at the same time")
                 container_weight = sum(c.get_total_weight() for c in container)
-
         temporary_storing_stack = []
         while container_weight > self.top_weight and self.top_weight != 0:
             temporary_storing_stack.append(self.pop_container_from_stack())
-
         temporary_storing_stack.append(container)
         for temp_stack_pop in reversed(temporary_storing_stack):
             self.push_container_to_stack(temp_stack_pop)
-
-    
+        
     def pop_container_from_stack(self):
         if len(self.containers) == 0:
             raise Exception("Stack is empty")
@@ -136,6 +128,7 @@ class ContainerStack:
             for c in container:
                 self.stack_weight -= c.get_total_weight()
                 self.operationCounter += 1
+            self.number_of_containers -= len(container)
             self.update_top_weight()
             return container
 
@@ -150,34 +143,8 @@ class ContainerStack:
             self.pop_container_from_stack()
             for temp_stack_pop in reversed(temporary_storing_stack):
                 self.push_container_to_stack(temp_stack_pop)
-                    
-
-
-
-    def remove_container_from_stack1(self, container):
-        if len(self.containers) == 0:
-            raise Exception("Stack is empty")
-        else:
-            for index, stack in enumerate(self.containers):
-                if container in stack:
-                    self.containers.pop(index)
-
-                    print(len(self.containers))
-                    for c in stack:
-                        self.stack_weight -= c.get_total_weight()
-                        self.operationCounter += 1
-
-                    self.update_top_weight()
-                    return stack
-            raise Exception("Container not found in stack")
-
-    # Used to get the height level of a container in the stack (used in find_container function)
-    def get_index_of_container(self, container):
-        for index, stack in enumerate(self.containers):
-            if container in stack:
-                return index
-        return -1
-
+            
+        
     # Tostring function
     def __str__(self) -> str:
         return f"Container stack at location {self.location_in_section}, has an operation counter of {self.operationCounter} and a stack weight of {self.stack_weight} tons"
@@ -188,7 +155,6 @@ class ContainerStack:
                 print(c)
 
 
-# Main function that creates a container stack and adds 10 containers to it
 def main():
     
     # Create a new stack for testing purposes
@@ -215,9 +181,8 @@ def main():
     c11 = Container(11, 20, 2, 20, 20)
     c12 = Container(12, 20, 2, 20, 20)
 
-    ## Add all the containers to a list, first we add 40-feet containers
+    ## Add every 40-feet container to the set of containers, and then add them to the stack
     container_set = [c1, c2, c3, c4, c5, c6, c7, c8]
-    
     for container in container_set:
         stack.add_container_to_stack(container)
     
@@ -229,6 +194,7 @@ def main():
     # Create a new stack for testing purposes
     stack2 = ContainerStack("B", (1, 0), 18)
     
+
     container_set.clear()
     container_set = [c1, c2, c3, c4, c5, c6, c7, [c9, c10], [c11, c12]]
     
@@ -238,15 +204,16 @@ def main():
     # Print the stack, and the operation counter. Should be 67
     print(stack2)
     stack2.print_stack_as_list()
+    print(stack2.get_number_of_containers(), "containers in stack")
 
     # Remove a container from the stack
     stack2.remove_container_from_stack(c12)
 
-    print("------------------ After removing container 12 ------------------")
+    print("\n------------------ After removing container 12 ------------------")
     stack2.print_stack_as_list()
 
+    print(stack2.get_number_of_containers(), "containers in stack")
     print("printing weights at each level in the stack", stack2.get_weight_at_height_level(0))
-    print(stack2)
 
 
         

@@ -51,11 +51,17 @@ def load_ship_with_containers_from_file(set_size):
             # Iterate through the containers in the set of containers file
             set_of_containers = load_set_of_containers(container_file_path)
             ship.load_ship(set_of_containers)
-
         return ship
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         print("The file {} does not exist. Creating a set with given size, and making a new ship".format(ship_file_path))
         container_set = ContainerSet()
-        container_set.generate_random_set(set_size)
+        container_set.generate_random_containers(set_size)
         save_set_of_containers(container_set, container_file_path)
-        load_ship_with_containers_from_file(set_size)
+        ship = ContainerShip(24, 22, 18)
+        ship.load_ship(container_set)
+        save_ship_with_containers_to_file(ship, ship_file_path)
+        print("Ship saved to file: {}".format(ship_file_path))
+        return ship
+
+
+

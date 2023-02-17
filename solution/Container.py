@@ -30,7 +30,6 @@ class Container:
     def get_total_weight(self):
         return self.weight + self.cargo
         
-    
     def set_cargo(self, cargo):
         if cargo > self.weight_capacity:
             raise Exception("Cargo is too heavy")
@@ -44,7 +43,7 @@ class Container:
     def __repr__(self) -> str:
         return f"C:{self.get_code()} L:{self.get_length()} W:{self.get_cargo()} TW:{self.get_total_weight()}"
 
-
+# Makes a unique code for each container (0000, 0001, 0002, etc.)
 def create_container_code():
     if not hasattr(create_container_code, "counter"):
         create_container_code.counter = 0
@@ -109,6 +108,7 @@ def main():
     print(small_container)
     print(big_container)
 
+    # Generate a random container
     random_container = generate_random_container()
     print(random_container)
 
