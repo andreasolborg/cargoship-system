@@ -8,5 +8,8 @@ This program is designed to help Trondheim International Shipping (TIS) manage t
 ## Requirements
 
 To run this program, you will need:
+Python 3.7 or higher 
+An IDE
 
-Python 3.7 or higher A terminal or command prompt
+## Usage
+To start the program, navigate to the directory containing the program files and run "main.py" file
