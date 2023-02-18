@@ -39,8 +39,8 @@ def save_ship_with_containers_to_file(ship, file_path):
 
 
 def load_ship_with_containers_from_file(set_size):
-    ship_file_path = "./solution/saved_ships/ship_of_{}_containers.tsv".format(set_size)
-    container_file_path = "./solution/set_of_containers/set_of_{}_containers.tsv".format(set_size)
+    ship_file_path = "./saved_ships/ship_of_{}_containers.tsv".format(set_size)
+    container_file_path = "./set_of_containers/set_of_{}_containers.tsv".format(set_size)
     try:
         with open(ship_file_path, "r") as file:
             line = file.readline()

@@ -351,14 +351,14 @@ def main():
     ship_dimensions = [24, 22, 18]
     ship = ContainerShip(
         ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
-    #loaded_container_set = load_set_of_containers("./solution/set_of_containers/set_of_6k_containers.tsv")
+    #loaded_container_set = load_set_of_containers("./set_of_containers/set_of_6k_containers.tsv")
     container_set = ContainerSet()
     set_size = 5000
     random.seed(10)
 
     # Generate a set of containers with the given size
     container_set.generate_random_containers(set_size)
-    save_set_of_containers(container_set, "./solution/set_of_containers/set_of_{}_containers.tsv".format(set_size))
+    save_set_of_containers(container_set, "./set_of_containers/set_of_{}_containers.tsv".format(set_size))
     print("Number of containers to load: " + str(len(container_set.containers)))
 
     # Load the ship with the containers from the container set
@@ -386,7 +386,7 @@ def main():
     ship.find_container("5325")
 
     # Save ship with containers to file
-    save_ship_with_containers_to_file(ship, "./solution/saved_ships/ship_of_{set_size}_containers.tsv".format(set_size=set_size))
+    save_ship_with_containers_to_file(ship, "./saved_ships/ship_of_{set_size}_containers.tsv".format(set_size=set_size))
 
     # Unload the entire ship
     print("\n\n\n#### UNLOADING CONTAINERS ####")

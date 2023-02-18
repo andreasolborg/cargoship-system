@@ -115,13 +115,13 @@ def task4():
     # Generate a set of 15 random containers, with length 20 or 40 (chosen at random)
     demo_set = ContainerSet()
     demo_set.generate_random_containers(15)
-    save_set_of_containers(demo_set, "./solution/set_of_containers/demo_set.tsv")
+    save_set_of_containers(demo_set, "./set_of_containers/demo_set.tsv")
     # The set should be saved in the file "demo_set.tsv" in the folder "set_of_containers"
 
     demo_set.flush()
 
     # Load the set from the file "demo_set.tsv" in the folder "set_of_containers"
-    demo_set = load_set_of_containers("./solution/set_of_containers/demo_set.tsv")
+    demo_set = load_set_of_containers("./set_of_containers/demo_set.tsv")
     # The set should be loaded from the file "demo_set.tsv" in the folder "set_of_containers"
     print(demo_set.containers)
 
@@ -174,7 +174,7 @@ def task6():
     set_size = 6500
     container_set.generate_random_containers(set_size) # set_size containers of random length
 
-    save_set_of_containers(container_set, "./solution/set_of_containers/set_of_{}_containers.tsv".format(set_size))
+    save_set_of_containers(container_set, "./set_of_containers/set_of_{}_containers.tsv".format(set_size))
     # Load the containers containter by container into the ship (task 7 actually)
     
     ship.load_ship(container_set)
@@ -185,17 +185,17 @@ def task6():
     print("New ship: \n\n\n")
 
     # Save the ship to a file (pretty version)
-    save_ship_with_containers_to_file(ship, "./solution/saved_ships/ship_of_{}_containers.tsv".format(set_size))
+    save_ship_with_containers_to_file(ship, "./saved_ships/ship_of_{}_containers.tsv".format(set_size))
 
     # Make a new Container Set, and load the containers from the file to a new Ship. These two ships should be identical
-    container_set = load_set_of_containers("./solution/set_of_containers/set_of_{}_containers.tsv".format(set_size))
+    container_set = load_set_of_containers("./set_of_containers/set_of_{}_containers.tsv".format(set_size))
     ship2 = ContainerShip(ship_dimensions[0], ship_dimensions[1], ship_dimensions[2])
     
     # Load the containers into the ship
     ship2.load_ship(container_set)
 
     # Save the ship to a file
-    # save_ship_with_containers_to_file(ship2, "./solution/saved_ships/demo_ship_basic2.tsv")
+    # save_ship_with_containers_to_file(ship2, "./saved_ships/demo_ship_basic2.tsv")
 
     # Print the ship
     print(ship2)
@@ -217,7 +217,7 @@ def task7():
 
     container_set.generate_random_containers(set_size) # 5000 containers of random length
 
-    save_set_of_containers(container_set, "./solution/set_of_containers/set_of_{}_containers.tsv".format(set_size))
+    save_set_of_containers(container_set, "./set_of_containers/set_of_{}_containers.tsv".format(set_size))
 
     # Load the containers containter by container into the ship (task 7 actually)
     ship.load_ship(container_set)
@@ -344,7 +344,7 @@ def edge_cases():
 
     # Save the ship to file, this should have the full 20ft containers on the bottom, and the full 40ft containers in the middle, and the empty 40ft containers on top
     # See the edge_cases.tsv file for the result
-    save_ship_with_containers_to_file(ship, "./solution/saved_ships/edge_cases.tsv")
+    save_ship_with_containers_to_file(ship, "./saved_ships/edge_cases.tsv")
 
     print(ship)
 
@@ -411,11 +411,10 @@ def load_individual_containers_test():
     container_set.add_container_to_set(c5)
     container_set.generate_random_containers(2400)
     ship.load_ship(container_set)
-    save_ship_with_containers_to_file(ship, "./solution/saved_ships/individual_containers_ship_test.tsv")
-    save_set_of_containers(container_set, "./solution/set_of_containers/individual_containers_test.tsv")
+    save_ship_with_containers_to_file(ship, "./saved_ships/individual_containers_ship_test.tsv")
+    save_set_of_containers(container_set, "./set_of_containers/individual_containers_test.tsv")
     print(ship)
 
-    reset()
 
 def import_non_existing_ship_file():
     # Import a file that does not exist. It should make a new set of containers and load a new ship with them, and save the ship to a new file
@@ -460,32 +459,32 @@ def main():
     print("------------------------------------- TASK 1 -------------------------------------")
     task1()
     print("------------------------------------- TASK 2 -------------------------------------")
-    # task2()
+    task2()
     print("------------------------------------- TASK 3 -------------------------------------")
-    # task3()
+    task3()
     print("------------------------------------- TASK 4 -------------------------------------")
-    # task4()
+    task4()
     print("------------------------------------- TASK 5 -------------------------------------")
-    # task5()
+    task5()
     print("------------------------------------- TASK 6 -------------------------------------")
-    # task6()
+    task6()
     print("------------------------------------- TASK 7 -------------------------------------")
-    # task7()
+    task7()
     print("------------------------------------- TASK 8 -------------------------------------")
-    # task8()
+    task8()
     print("------------------------------------- TASK 9 -------------------------------------")
-    # task9()
+    task9()
     print("------------------------------------- TASK 10 -------------------------------------")
-    # task10()
+    task10()
     print("------------------------------------- TASK 11 -------------------------------------")
-    # task11()
+    task11()
     print("------------------------------------- TASK 12 -------------------------------------")
-    # task12()
+    task12()
 
-    # edge_cases()
-    # load_individual_containers_test()
-    # import_non_existing_ship_file()
-    # crane_test()
+    edge_cases()
+    load_individual_containers_test()
+    import_non_existing_ship_file()
+    crane_test()
     end_time = time.time()
     print("Total run-time of all tasks: ", end_time - begin_time)
 
